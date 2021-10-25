@@ -1,0 +1,48 @@
+server start_____________________________________________________________
+
+init()
+
+while true :
+    #attente d'une connexion
+    connection = listen()
+
+    #une fois que la connexion est commencée, lire le type de requête
+    type = read(connection)
+    
+    #lire le contenu de la requête 
+    content = read(connection)
+    
+    #traiter la requête
+    do_things()
+    
+    #ACK du serveur
+    send()
+
+    #fermer la connexion
+    disconnect()
+
+server end_______________________________________________________________
+
+
+client start_____________________________________________________________
+
+init()
+
+#input de l'utilisateur
+content, type = input_things()
+
+#construire la requête
+request = build_request(content, type)
+
+#connexion au serveur
+connect()
+
+#envoi de la requête
+send()
+
+#ACK du serveur
+receive()
+
+#fermer la connexion
+
+client end_______________________________________________________________
