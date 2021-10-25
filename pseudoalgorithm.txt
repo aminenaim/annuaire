@@ -46,3 +46,17 @@ receive()
 #fermer la connexion
 
 client end_______________________________________________________________
+
+
+RAFFINAGE 1
+
+client + serveur
+
+class requestType(Enum):
+    AUTH = 0
+    CREATE = 1
+    DELETE = 2
+    CHANGE = 3
+    VIEW = 4
+
+    
