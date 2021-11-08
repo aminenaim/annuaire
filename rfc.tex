@@ -1,0 +1,128 @@
+\documentclass[10pt]{article}
+\usepackage[USenglish]{babel}
+\usepackage[useregional]{datetime2}
+\usepackage{lipsum}
+\usepackage{blindtext}
+\usepackage{listings}
+\DTMlangsetup[en-US]{showdayofmonth=false}
+
+\newcommand{\rfcId}{1.0}
+\newcommand{\rfcTitle}{Service d'Annuaires Partagés}
+\newcommand{\rfcAuthor}{Amine NAIM, Axel DELAS, Pierre BECKERS}
+\newcommand{\rfcDate}{\today}
+\newcommand{\rfcInstitution}{Université Paul Sabatier}
+
+% TABLE OF CONTENT
+\usepackage{tocloft}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsubsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsubsubsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\contentsname}{Table of Content}
+
+% MARGINS
+\usepackage{titlesec}
+\titlelabel{\thetitle.\quad}
+\usepackage{geometry} 
+\geometry{
+	a4paper,
+	left=30mm,
+	top=30mm,
+	bottom=30mm,
+	right=30mm
+}
+\setlength{\leftskip}{17pt}
+
+% HEADER AND FOOTER
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\pagestyle{fancyplain}
+\fancyhead{}
+\fancyfoot{}
+\fancyhead[L]{RFC \rfcId}
+\fancyhead[C]{\rfcTitle}
+\fancyhead[R]{\rfcDate}
+\fancyfoot[L]{\rfcAuthor} 
+\fancyfoot[C]{} 
+\fancyfoot[R]{[Page \thepage] \\} 
+\renewcommand{\headrulewidth}{0pt} 
+\renewcommand{\footrulewidth}{0pt} 
+\setlength{\headheight}{13.6pt}
+
+% FIRST PAGE
+\usepackage{multicol}
+
+% FONT
+\usepackage{inconsolata}
+\renewcommand{\familydefault}{\ttdefault}
+
+\begin{document}
+
+\begin{multicols}{2}
+	\begin{flushleft}
+		Projet Semestre 5
+	\end{flushleft}
+\columnbreak
+	\begin{flushright}
+		\rfcAuthor \\
+		\rfcInstitution
+	\end{flushright}
+\end{multicols}
+
+\vspace{1in} { \center } \vspace{1in}
+
+\begin{abstract}
+	Le présent document explique le fonctionnement du service d'annuaires partagés. Il comporte quatre parties : une à propos des Unités de données de Protocole (PDU) ; une au sujet de la connexion/deconnexion du client au serveur ; une concernant les échanges avec un compte utilisateur standard puis une avec un compte utilisateur administrateur. Chaque partie détaillera les types de requêtes et réponses, on y expliquera les codes d'erreurs mais aussi des exemples d'échanges entre le client et le serveur.
+\end{abstract}
+\pagebreak
+
+\tableofcontents
+\pagebreak
+
+\section{Introduction}{
+    Le présent document détaille le fonctionnement d'annuaires partagés programmé en Python. Cet annuaire se base sur un échange entre un client et un serveur. Le principe de cette application est d'offir aux utilisateurs la possibilité de consulter leur annuaires comportant le nom, le prénom, l'adresse email ainsi que le numéro de téléphone de leurs contacts. Chaque utilisateur peut ajouter ou supprimer des contacts. Pour réguler les compte utilisateurs, un administrateur peut ajouter ou supprimer des utilisateurs standards et a tous les droits sur les annuaires. Pour permettre le bon fonctionnement de l'application, nous avons mis en place un protocole d'échange entre client/serveur.
+
+}
+\pagebreak
+
+\section{Specification du Protocole d'échange}{
+    Pour la réalisation de ce projet, il est nécéssaire d'exploiter la notion d'Unité de données de protocole (PDU). Les messages échanges entre le client et le serveur comportent différents champs qui varient en nombre et en type selon le type de requête. Chaque champ est séparé par un autre d'un espace.
+	
+	\paragraph{Exemple} <Champ1> <Champ2> <Champ3> <Champ4> \newline
+	
+	\noindent <Champ1> détermine le type de requête.
+	
+	\noindent On distingue huit types de requêtes régissant les échanges Client/Serveur :
+	\begin{lstlisting}
+        AUTH
+        ADD
+        DELETE
+        GET
+        GRANT
+        EDIT
+        SEARCH
+        QUIT
+    \end{lstlisting}
+    
+    On distingue aussi huit types d'erreur :
+    \begin{lstlisting}
+        200 : requete traitee avec succes.
+        400 : identifiants incorrects.
+        401 : erreur d'emission client.
+        402 : requete au format incorrect.
+        403 : erreur client inconnue.
+        501 : erreur d'emission serveur.
+        502 : erreur d'ouverture du fichier sur le serveur.
+        503 : serveur injoignable.
+    \end{lstlisting}
+}
+\pagebreak
+
+\section{Connexion et Déconnexion}{
+	
+	\subsection{Connexion}{
+	    La connexion nécessite d'avoir un compte utilisateur créé par l'administrateur.
+	    La connexion nécessite également de s'authentifier sur le serveur avec un couple identifiant et mot de passe.
+	}
+}
+
+\end{document}
