@@ -1,27 +1,44 @@
-#RAFFINAGE 1
+import socket
+import threading
 
-import json
-import typing as t
-#client + serveur
+HEADER = 64
+FORMAT = 'utf-8'
 
-class requestType(Enum):
-    AUTH = 0
-    CREATE = 1
-    DELETE = 2
-    CHANGE = 3
-    VIEW = 4
+PORT = 5050
+HOST = socket.gethostbyname(socket.gethostname()) # gets the current hostname IP
+ADDR = (HOST, PORT)
 
-class directory():
-    name : str
-    phone_number : str
-    postal_adress : str
-    mail_adress : str
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind(ADDR) # binding socket to address
 
-    def _init_(self, name, phone_number, postal_adress, mail_adress):
-        self.name = name
-        self.phone_number = phone_number
-        self.postal_adress = postal_adress
-        self.mail_adress = mail_adress
+def handle_client(conn, addr):
+    print(f"[NEW CONNECTION] {addr} connected.")
+    
+    connected = True
+    while connected:
+        message_lenght = conn.recv(HEADER).decode(FORMAT)
 
-    def toJson(self):
-        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4) 
+        if message_lenght:
+            message_lenght = int(message_lenght)
+            message = conn.recv(message_lenght).decode(FORMAT)
+
+            if message == "DISCONNECT":
+                connected = False
+            
+            print(f"[{addr}] {message}")
+            conn.send("message received".encode(FORMAT))
+
+    conn.close()
+        
+
+def start():
+    server.listen()
+    while True:
+        conn, addr = server.accept() # storing connection object and address of connection 
+        thread = threading.Thread(target=handle_client, args=(conn, addr))
+        thread.start()
+        print("[ACTIVE CONNECTIONS]", threading.active_count()-1)
+
+print("[STARTING] server is starting...")
+print(f"[LISTENING] server is listening on {HOST}")
+start()
