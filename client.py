@@ -12,10 +12,10 @@ client.connect(ADDR)
 
 def send(string):
     message = string.encode(FORMAT)
-    message_length = len(message)
-    send_length = str(message_length).encode(FORMAT)
-    send_length += b' '* (HEADER - len(send_length))
-    client.send(send_length)
+    message_len = len(message)
+    send_len = str(message_len).encode(FORMAT)
+    send_len += b' '* (HEADER - len(send_len))
+    client.send(send_len)
     client.send(message)
     print(client.recv(2048).decode(FORMAT))
 
