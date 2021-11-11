@@ -15,7 +15,7 @@ In another terminal
 ```
 python3 client.py
 ```
-And then (if everything goes well) the client/server connection is successfully established.
+And then (if everything goes well) the client/server connection should be successfully established.
 
 <!-- ### Directory Overview
 
