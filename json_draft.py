@@ -5,13 +5,16 @@ import typing as t
 import socket
 #client + serveur
 
-class requestType(Enum):
-    AUTH = 0
-    CREATE = 1
-    DELETE = 2
-    CHANGE = 3
-    VIEW = 4
-
+class requestType():
+        AUTH = 0
+        ADD = 1
+        DELETE = 2
+        GET = 3
+        GRANT = 4
+        EDIT = 5
+        SEARCH = 6
+        QUIT = 7
+        
 class directory():
     name : str
     phone_number : str
