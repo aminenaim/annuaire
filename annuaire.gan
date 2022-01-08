@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2021-09-13" view-index="0" gantt-divider-location="595" resource-divider-location="300" version="2.8.11" locale="fr_FR">
+    <description/>
+    <view zooming-state="default:7" id="gantt-chart">
+        <field id="tpd3" name="Nom" width="351" order="0"/>
+        <field id="tpd4" name="Date de début" width="85" order="1"/>
+        <field id="tpd5" name="Date de fin" width="155" order="2"/>
+        <option id="color.recent">
+            <![CDATA[#9999ff #9900ff #ff0033 #ffcc00 #3366ff]]>
+        </option>
+    </view>
+    <view id="resource-table">
+        <field id="0" name="Nom" width="210" order="0"/>
+        <field id="1" name="Rôle par défaut" width="86" order="1"/>
+    </view>
+    <!-- -->
+    <calendars>
+        <day-types>
+            <day-type id="0"/>
+            <day-type id="1"/>
+            <default-week id="1" name="default" sun="1" mon="0" tue="0" wed="0" thu="0" fri="0" sat="1"/>
+            <only-show-weekends value="true"/>
+            <overriden-day-types/>
+            <days/>
+        </day-types>
+    </calendars>
+    <tasks empty-milestones="true">
+        <taskproperties>
+            <taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
+            <taskproperty id="tpd1" name="priority" type="default" valuetype="icon"/>
+            <taskproperty id="tpd2" name="info" type="default" valuetype="icon"/>
+            <taskproperty id="tpd3" name="name" type="default" valuetype="text"/>
+            <taskproperty id="tpd4" name="begindate" type="default" valuetype="date"/>
+            <taskproperty id="tpd5" name="enddate" type="default" valuetype="date"/>
+            <taskproperty id="tpd6" name="duration" type="default" valuetype="int"/>
+            <taskproperty id="tpd7" name="completion" type="default" valuetype="int"/>
+            <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
+            <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
+        </taskproperties>
+        <task id="0" name="Capture du Besoin" color="#3366ff" meeting="false" start="2021-10-14" duration="10" complete="0" thirdDate="2021-12-29" thirdDate-constraint="0" expand="true">
+            <depend id="3" type="2" difference="0" hardness="Strong"/>
+            <depend id="10" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="3" name="Pilotage Projet" color="#3366ff" meeting="false" start="2021-10-24" duration="77" complete="0" thirdDate="2021-09-28" thirdDate-constraint="0" expand="true">
+            <depend id="39" type="2" difference="0" hardness="Strong"/>
+            <task id="10" name="Structuration du Projet" color="#3366ff" meeting="false" start="2021-10-24" duration="7" complete="0" thirdDate="2021-10-04" thirdDate-constraint="0" expand="true">
+                <depend id="21" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="14" name="Suivi Projet" color="#3366ff" meeting="false" start="2021-10-24" duration="77" complete="0" thirdDate="2021-10-21" thirdDate-constraint="0" expand="true"/>
+        </task>
+        <task id="21" name="Description du Projet" color="#ffcc00" meeting="false" start="2021-10-31" duration="40" complete="0" thirdDate="2021-10-28" thirdDate-constraint="0" expand="true">
+            <task id="27" name="Rédaction RFC" color="#ffcc00" meeting="false" start="2021-10-31" duration="28" complete="0" thirdDate="2021-10-28" thirdDate-constraint="0" expand="true">
+                <depend id="38" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="38" name="Algorithme Serveur" color="#ffcc00" meeting="false" start="2021-11-28" duration="4" complete="0" thirdDate="2021-10-28" thirdDate-constraint="0" expand="true">
+                <depend id="31" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="31" name="Algorithme Client" color="#ffcc00" meeting="false" start="2021-12-02" duration="8" complete="0" thirdDate="2021-10-28" thirdDate-constraint="0" expand="true">
+                <depend id="46" type="2" difference="0" hardness="Strong"/>
+            </task>
+        </task>
+        <task id="46" name="Relecture &amp; Correction" color="#9999ff" meeting="false" start="2021-12-10" duration="11" complete="0" thirdDate="2021-09-13" thirdDate-constraint="0" expand="true">
+            <task id="52" name="Relecture &amp; Correction RFC" color="#9999ff" meeting="false" start="2021-12-10" duration="7" complete="0" thirdDate="2021-12-07" thirdDate-constraint="0" expand="true">
+                <depend id="56" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="56" name="Relecture &amp; Correction des algorithmiques" color="#9999ff" meeting="false" start="2021-12-17" duration="4" complete="0" thirdDate="2021-12-14" thirdDate-constraint="0" expand="true"/>
+        </task>
+        <task id="39" name="Livraison Description du Projet" color="#ff0033" meeting="true" start="2022-01-09" duration="0" complete="0" thirdDate="2021-09-27" thirdDate-constraint="0" priority="2" expand="true"/>
+    </tasks>
+    <resources/>
+    <allocations/>
+    <vacations/>
+    <previous/>
+    <roles roleset-name="Default"/>
+</project>
