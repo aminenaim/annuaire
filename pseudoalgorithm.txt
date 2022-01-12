@@ -1,27 +1,35 @@
 __PREMIER RAFFINAGE
 
 while true:
+    #wait for connexion
     connexion = listenForConnexion()
+    
+    #authentify the user
     do:
         request = listenForRequest(connexion)
         response = auth(connexion, request)
         send_response(connexion, response)
     while #connexion isn't authentified
     
-    while #connexion isn't finished
+    #process the user's requests
+    while #connexion isn't finished:
         request = listenForRequest(connexion)
         response = process(connexion, request)
         send_response(connexion, response)
+    
     disconnect(connexion)
 
 while true:
     #user chooses an action
     action = getAction()
+
     #request is built
     request = buildRequest(action)
-    #and sends it to the server
+
+    #and sent to the server
     send_request(request)
-    #then displays success or failure
+
+    #then the client displays success or failure
     error_code = listenForRequest()
     display(error_code)
 
@@ -39,46 +47,86 @@ function auth(connexion, request):
             #return auth error
 
 
-function add():
-    #open users file
-        #case user:
-            #check if connexion is admin
-                #if connexion is not admin : return error code
-            #check if user exists
-            #if user exists:
-                #return error code
-            #if user doesn't exist:
-                #add new user and annuaire file path to the users file
-                #save and close file
-                #create new annuaire file
-                #save and close file
-                #return success code
-        #case contact:
-            #open user's annuaire file
-            #check if contact already exists
-            #if contact exists:
-                #return error code
-            #if contact doesn't exist:
-                #add contact to file
-                #save and close file
-                #return success code
 
-function delete():
+function add():
+    #case user:
+        #check if connexion is admin
+        #check if user exists
+        #add new user and directory file path to the users file
+        #create new directory file
     
+    #case contact:
+        #open user's directory file
+        #check if contact doesn't already exists
+        #add contact to file
+function delete():
+    #case user:
+        #check if user exists
+        #delete user from file
+        #delete linked directory
+
+    #case contact:
+        #open user's directory
+        #check if contact exists
+        #delete contact from the directory
+
+
+
+function edit():
+    #check if contact exists in user's directory
+    #edit the contact's properties
+
+
+
+function get():
+    #case directory:
+        #check if directory/user exists
+        #check if user has permission
+        #open the directory
+        #send content to client
+
+    #case contact:
+        #check if directory exists
+        #check if contact exists
+        #check if user has permission
+        #open the directory
+        #send contact's content to client
+
+    #case allowed directories:
+        #send list of directories to client
+
+
+
+function allow():
+    #check if users exist
+    #for each user:
+        #add permission to user
+
+
+
+function search():
+    #check if contact exists in
+    #send contact info to client
+
+
+
+function quit():
+    #stop the connexion
+
 
 
 function process(request):
     #case ADD:
-        add(...)
+        add(request)
     #case DELETE:
-        delete(...)
+        delete(request)
     #case EDIT:
-        edit(...)
+        edit(request)
     #case GET:
-        get(...)
+        get(request)
     #case ALLOW:
-        allow(...)
+        allow(request)
     #case SEARCH:
-        search(...)
+        search(request)
     #case QUIT:
-        quit(...)
+        quit()
