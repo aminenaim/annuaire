@@ -3,21 +3,51 @@ server start_____________________________________________________________
 #à décider : multithreading ou mono
 #j'ai peur qu'en multi il y aie des problèmes de conflits sur le fichier json qu'est notre db
 
+
+__PREMIER RAFFINAGE
+
 while true:
     connexion = listenForConnexion()
         do:
             request = listenForRequest(connexion)
             response = auth(connexion, request)
             send_response(connexion, response)
-        while !Authentified(connexion)
+        while #connexion isn't authentified
+        
+        while #connexion isn't finished
+            request = listenForRequest(connexion)
+            response = process(connexion, request)
+            send_response(connexion, response)
+
+while true:
+    #user chooses an action
+    request = buildRequest()
+    #and sends it to the server
+    send_request(request)
+    #et affiche le code d'erreur
+    error_code = listenForRequest()
+    display(error_code)
+
+
+function add():
+    #open user file
+        #if user:
+
+        
 
 
 function auth(connexion, request):
-    #check hash and user from request
-    #designate the connexion has authentified
+    #check if type is AUTH or QUIT
+    #if QUIT then stop there
+    #else:
+        #check hash and user from request
+        #if correct :
+            #designate the connexion has authentified
+        #else:
+            #return auth error
 
 function process(request):
-    elseif request.type ==ADD:
+    elseif request.type == ADD:
         add(...)
     elseif request.type == DELETE:
         delete(...)
@@ -32,13 +62,3 @@ function process(request):
     elseif request.type == QUIT:
         quit(...)
 
-while true:
-    #l'utilisateur choisit une action par son interface utilisateur
-    request = buildRequest()
-    #...et l'envoie au serveur
-    send(request)
-    #et affiche le code d'erreur
-    error_code = listenForRequest()
-    display(error_code)
-
-        
