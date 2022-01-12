@@ -19,20 +19,25 @@ def handle_client(conn, addr):
     print(f"[NEW CONNECTION] {addr} connected.")
     
     connected = True
-    while connected:
+    while connected == True:
         request_len = conn.recv(HEADER).decode(FORMAT)
 
         if request_len:
             request_len = int(request_len)
             formatted_request = conn.recv(request_len).decode(FORMAT)
             
-            r = request.load(formatted_request)
+            # r = request.load(formatted_request)
     
-            if r.rtype == 7:
-                connected = False
+            # if r.rtype == 7:
+            #     connected = False
             
-            print(f"[{addr}] {r.rparameter}")
-            #conn.send("message received".encode(FORMAT))
+            
+            print(f"[{addr}] {formatted_request}")
+            conn.send("message received".encode(FORMAT))
+
+            if formatted_request == "quit":
+                print("quit request received")
+                connected = False
 
     conn.close()
         
@@ -47,6 +52,7 @@ def start():
         thread = threading.Thread(target=handle_client, args=(conn, addr))
         thread.start()
         print("[ACTIVE CONNECTIONS]", threading.active_count()-1)
+    
 
 
 print("[STARTING] server is starting...")
