@@ -1,62 +1,44 @@
 server start_____________________________________________________________
 
-init()
+#à décider : multithreading ou mono
+#j'ai peur qu'en multi il y aie des problèmes de conflits sur le fichier json qu'est notre db
 
-while true :
-    #attente d'une connexion
-    connection = listen()
-
-    #une fois que la connexion est commencée, lire le type de requête
-    type = read(connection)
-    
-    #lire le contenu de la requête 
-    content = read(connection)
-    
-    #traiter la requête
-    do_things()
-    
-    #ACK du serveur
-    send()
-
-    #fermer la connexion
-    disconnect()
-
-server end_______________________________________________________________
+while true:
+    connexion = listenForConnexion()
+        do:
+            request = listenForRequest(connexion)
+            response = auth(connexion, request)
+            send_response(connexion, response)
+        while !Authentified(connexion)
 
 
-client start_____________________________________________________________
+function auth(connexion, request):
+    #check hash and user from request
+    #designate the connexion has authentified
 
-init()
+function process(request):
+    elseif request.type ==ADD:
+        add(...)
+    elseif request.type == DELETE:
+        delete(...)
+    elseif request.type == EDIT:
+        edit(...)
+    elseif request.type == GET:
+        get(...)
+    elseif request.type == ALLOW:
+        allow(...)
+    elseif request.type == SEARCH:
+        search(...)
+    elseif request.type == QUIT:
+        quit(...)
 
-#input de l'utilisateur
-content, type = input_things()
+while true:
+    #l'utilisateur choisit une action par son interface utilisateur
+    request = buildRequest()
+    #...et l'envoie au serveur
+    send(request)
+    #et affiche le code d'erreur
+    error_code = listenForRequest()
+    display(error_code)
 
-#construire la requête
-request = build_request(content, type)
-
-#connexion au serveur
-connect()
-
-#envoi de la requête
-send()
-
-#ACK du serveur
-receive()
-
-#fermer la connexion
-
-client end_______________________________________________________________
-
-
-RAFFINAGE 1
-
-client + serveur
-
-class requestType(Enum):
-    AUTH = 0
-    CREATE = 1
-    DELETE = 2
-    CHANGE = 3
-    VIEW = 4
-
-    
+        
