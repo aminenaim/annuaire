@@ -1,40 +1,32 @@
-server start_____________________________________________________________
-
-#à décider : multithreading ou mono
-#j'ai peur qu'en multi il y aie des problèmes de conflits sur le fichier json qu'est notre db
-
-
 __PREMIER RAFFINAGE
 
 while true:
     connexion = listenForConnexion()
-        do:
-            request = listenForRequest(connexion)
-            response = auth(connexion, request)
-            send_response(connexion, response)
-        while #connexion isn't authentified
-        
-        while #connexion isn't finished
-            request = listenForRequest(connexion)
-            response = process(connexion, request)
-            send_response(connexion, response)
+    do:
+        request = listenForRequest(connexion)
+        response = auth(connexion, request)
+        send_response(connexion, response)
+    while #connexion isn't authentified
+    
+    while #connexion isn't finished
+        request = listenForRequest(connexion)
+        response = process(connexion, request)
+        send_response(connexion, response)
+    disconnect(connexion)
 
 while true:
     #user chooses an action
-    request = buildRequest()
+    action = getAction()
+    #request is built
+    request = buildRequest(action)
     #and sends it to the server
     send_request(request)
-    #et affiche le code d'erreur
+    #then displays success or failure
     error_code = listenForRequest()
     display(error_code)
 
 
-function add():
-    #open user file
-        #if user:
-
-        
-
+__SECOND RAFFINAGE
 
 function auth(connexion, request):
     #check if type is AUTH or QUIT
@@ -46,19 +38,47 @@ function auth(connexion, request):
         #else:
             #return auth error
 
-function process(request):
-    elseif request.type == ADD:
-        add(...)
-    elseif request.type == DELETE:
-        delete(...)
-    elseif request.type == EDIT:
-        edit(...)
-    elseif request.type == GET:
-        get(...)
-    elseif request.type == ALLOW:
-        allow(...)
-    elseif request.type == SEARCH:
-        search(...)
-    elseif request.type == QUIT:
-        quit(...)
 
+function add():
+    #open users file
+        #case user:
+            #check if connexion is admin
+                #if connexion is not admin : return error code
+            #check if user exists
+            #if user exists:
+                #return error code
+            #if user doesn't exist:
+                #add new user and annuaire file path to the users file
+                #save and close file
+                #create new annuaire file
+                #save and close file
+                #return success code
+        #case contact:
+            #open user's annuaire file
+            #check if contact already exists
+            #if contact exists:
+                #return error code
+            #if contact doesn't exist:
+                #add contact to file
+                #save and close file
+                #return success code
+
+function delete():
+    
+
+
+function process(request):
+    #case ADD:
+        add(...)
+    #case DELETE:
+        delete(...)
+    #case EDIT:
+        edit(...)
+    #case GET:
+        get(...)
+    #case ALLOW:
+        allow(...)
+    #case SEARCH:
+        search(...)
+    #case QUIT:
+        quit(...)
