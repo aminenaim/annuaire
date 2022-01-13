@@ -113,7 +113,7 @@ function allow():
 
 
 function search():
-    #check if contact exists in
+    #check if contact exists
     #send contact info to client
     #return error_code
 
