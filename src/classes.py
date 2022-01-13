@@ -1,9 +1,9 @@
 """
 Classes utilisees par le client et serveur pour manipuler les informations plus efficacement
 """
-from email.policy import default
+#from email.policy import default
 import json
-import typing
+
 class Contact():
     nom : str
     prenom : str
@@ -19,9 +19,8 @@ class Contact():
         self.courriel = courriel
         self.adresse = adresse
 
-    def dump(self) -> str:
-        return json.dumps(self, default=lambda o: o.__dict__, 
-            sort_keys=True, indent=4)
+    def dump(self, jsonFile):
+        return json.dump(self, jsonFile, default=convert_to_dict, sort_keys=True, indent=4, )
 
     #def load(self, string):
     #        self = json.loads(string)
@@ -81,8 +80,8 @@ class Utilisateur():
     def setAcces(self):
         return self
 
-    def dump(self) -> str:
-        return json.dumps(self, default=convert_to_dict, sort_keys=True, indent=4)
+    def dump(self, jsonFile):
+        return json.dump(self, jsonFile, default=convert_to_dict, sort_keys=True, indent=4, )
 
     #def load(self, savedJson : str):
     #    self = json.loads(savedJson)
