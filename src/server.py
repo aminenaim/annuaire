@@ -73,10 +73,10 @@ user2 = Utilisateur("axeldelas","pwdaxel")
 
 user1.acces.append("annuaire_axeldelas")
 
-ctc = Contact("André", "Aoun", "0123456789","andre.aoun@mail.fr","1 Impasse Sanzissu 31000 TOULOUSE")
+ctc = Contact("Andre", "Aoun", "0123456789","andre.aoun@mail.fr","1 Impasse Sanzissu 31000 TOULOUSE")
 
 creerUtilisateur(user1)
 creerUtilisateur(user2)
 
 ajouterContact(user2, ctc)
-rechercherContact(user1, nom="Axel")
+rechercherContact(user1, nom="Andre")
