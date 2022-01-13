@@ -12,7 +12,7 @@ ADDR = (HOST, PORT)
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(ADDR)
 
-def send(string: request, ):
+def send(request : str ):
     encoded_request = request.encode(FORMAT)
 
     request_len = len(encoded_request)

@@ -1,9 +1,9 @@
 # from request import *
 from classes import *
 
-
 def handle_client(conn, addr):
     pass
+
 
 def creerUtilisateur(utilisateur : Utilisateur):
     """
@@ -25,7 +25,7 @@ def ajouterContact(utilisateur : Utilisateur, contact : Contact):
     """
     utilisateur.annuaire.contacts.append(contact)
 
-    nom_fichier = "annuaire_"+utilisateur.identifiant+".json"
+    nom_fichier = f"annuaire_{utilisateur.identifiant}.json"
     
     with open("server/annuaire/"+nom_fichier,'w') as fichier:
         # Ouverture du fichier en mode écriture et écriture de l'annuaire sérialisé mis à jour
@@ -45,38 +45,47 @@ def rechercherContact(utilisateur : Utilisateur, *args, **kwargs):
 
     
     for annuaire in utilisateur.acces:
-        with open("server/annuaire/"+annuaire+".json","r") as fichier_annuaire:
-            donnees = fichier_annuaire.read()
-            annuaire_lu = Annuaire
-            annuaire_lu.load(donnees)
-            print(len(annuaire_lu.contacts))
+        with open(f"server/annuaire/{annuaire}.json","r") as fichier_annuaire:
+            donneesAnnuaireBrut = fichier_annuaire.read()
+            print(donneesAnnuaireBrut)
+            #annuaire_lu = Annuaire().load(fichier_annuaire)
+        annuaire_lu = Annuaire(loadFromString=True, string=donneesAnnuaireBrut)
+        print(f"server/annuaire/{annuaire}.json de len:",len(annuaire_lu.contacts))
+        print(annuaire_lu.__str__())
 
-            for contact in annuaire_lu.contacts:
-                correspondance = False
-                print("iterating over annuaire")
-                for attribut_reference, attribut_contact in vars(reference).items(), vars(contact).items:
-                    if attribut_reference == None:
-                        continue
-                    if attribut_reference == attribut_contact:
-                        correspondance = True
-                    else:
-                        correspondance = False
-                        break
+        for contact in annuaire_lu.contacts:
+            correspondance = False
+            print("iterating over annuaire")
+
+            for attribut_reference, attribut_contact in vars(reference).items(), vars(contact).items:
                 
-                    print(contact.nom)
+                if attribut_reference == None:
+                    continue
+                if attribut_reference == attribut_contact:
+                    correspondance = True
+                else:
+                    correspondance = False
+                    break
+            
+                print(contact.nom)
 
-print("[STARTING]   server is starting...")
-print("[LISTENING]  server is listening")
+def main():
+    print("[STARTING]   server is starting...")
+    print("[LISTENING]  server is listening")
+    
+    user1 = Utilisateur("aminenaim", "pwd")
+    user2 = Utilisateur("axeldelas","pwdaxel")
+    
+    user1.addAcces("annuaire_axeldelas")
+    
+    ctc = Contact("Andre", "Aoun", "0123456789","andre.aoun@mail.fr","1 Impasse Sanzissu 31000 TOULOUSE")
+    
+    creerUtilisateur(user1)
+    creerUtilisateur(user2)
+    
+    ajouterContact(user2, ctc)
+    
+    rechercherContact(user1, nom="Andre")
 
-user1 = Utilisateur("aminenaim", "pwd")
-user2 = Utilisateur("axeldelas","pwdaxel")
-
-user1.acces.append("annuaire_axeldelas")
-
-ctc = Contact("Andre", "Aoun", "0123456789","andre.aoun@mail.fr","1 Impasse Sanzissu 31000 TOULOUSE")
-
-creerUtilisateur(user1)
-creerUtilisateur(user2)
-
-ajouterContact(user2, ctc)
-rechercherContact(user1, nom="Andre")
+if __name__ == "__main__":
+    main()

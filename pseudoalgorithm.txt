@@ -1,24 +1,37 @@
 __PREMIER RAFFINAGE
+Algorithme Serveur
+    /* Rôle : Gérer les connexions clients*/
+    Constante
+        AUTHENTIFICATION_OK <- 200
+        TERMINE <- 000
+    Variable
+        connexion : socket
+        requete : typeRequete
+        reponse : typeReponse
+        code_erreur : entier
+    Début
+        TantQue(Vrai) Faire
+            # attente de connexion
+            connexion <- attenteConnexion()
 
-while true:
-    #wait for connexion
-    connexion = listenForConnexion()
-    
-    #authentify the user
-    do:
-        request = listenForRequest(connexion)
-        response = auth(connexion, request)
-        send_response(connexion, response)
-    while #connexion isn't authentified
-    
-    #process the user's requests
-    while #connexion isn't finished:
-        request = listenForRequest(connexion)
-        response = process(connexion, request)
-        send_response(connexion, response)
-    
-    disconnect(connexion)
+            # authentification de l'utilisateur
+            Faire
+                requete <- ecouterPort(connexion)
+                reponse <- authentification(connexion, requete)
+                envoyer_reponse(connexion, reponse)
+            TantQue(connexion != AUTHENTIFICATION_OK)
 
+            # traitement de la requete
+            TantQue(connexion != TERMINE) Faire
+                requete <- ecouterPort(connexion)
+                reponse <- traiterRequete(connexion, requete)
+                envoyer_reponse(connexion, reponse)
+            
+            deconnecter(connexion)
+
+        TantQue(Vrai) Faire
+            # utilisateur choisi une action
+            action <-
 while true:
     #user chooses an action
     action = getAction()
