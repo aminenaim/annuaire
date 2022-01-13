@@ -41,33 +41,28 @@ def rechercherContact(utilisateur : Utilisateur, *args, **kwargs):
     adresse = kwargs.get("adresse", '')
 
     reference = Contact(nom, prenom, telephone, courriel, adresse)
-
+    liste_correspondance = []
     
     for annuaire in utilisateur.acces:
         with open(f"server/annuaire/{annuaire}.json","r") as fichier_annuaire:
-            #donneesAnnuaireBrut = fichier_annuaire.read()
-            #print(donneesAnnuaireBrut)
             annuaire_lu = json.load(fichier_annuaire, object_hook=convert_to_obj)
-        #annuaire_lu = Annuaire(loadFromString=True, string=donneesAnnuaireBrut)
-        print(f"server/annuaire/{annuaire}.json de len:",len(annuaire_lu.contacts))
-        print(annuaire_lu.__str__())
 
         for contact in annuaire_lu.contacts:
             correspondance = False
-            print("iterating over annuaire")
 
-            for attribut_reference, attribut_contact in vars(reference).items(), vars(contact).items:
-                
-                if attribut_reference == '':
+            for attribut_reference, attribut_contact in zip(vars(reference).items(), vars(contact).items()):
+                print("ref(",attribut_reference,") et comp(",attribut_contact,"")
+                if attribut_reference == None or attribut_contact == None:
                     continue
                 if attribut_reference == attribut_contact:
                     correspondance = True
                 else:
                     correspondance = False
                     break
-            
-                print(contact.nom)
-
+            liste_correspondance.append(contact)
+        set(liste_correspondance)
+        
+        print(liste_correspondance)
 def main():
     print("[STARTING]   server is starting...")
     print("[LISTENING]  server is listening")

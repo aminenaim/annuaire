@@ -1,153 +1,199 @@
 __PREMIER RAFFINAGE
-Algorithme Serveur
-    /* Rôle : Gérer les connexions clients*/
-    Constante
-        AUTHENTIFICATION_OK <- 200
-        TERMINE <- 000
-    Variable
-        connexion : socket
-        requete : typeRequete
-        reponse : typeReponse
-        code_erreur : entier
-    Début
-        TantQue(Vrai) Faire
-            # attente de connexion
-            connexion <- attenteConnexion()
 
-            # authentification de l'utilisateur
-            Faire
-                requete <- ecouterPort(connexion)
-                reponse <- authentification(connexion, requete)
-                envoyer_reponse(connexion, reponse)
-            TantQue(connexion != AUTHENTIFICATION_OK)
+    Algorithme Serveur
+        /* Rôle : Gérer les connexions clients*/
+        Constante
+            AUTHENTIFICATION_OK <- 200
+            TERMINE <- 000
+        Variable
+            connexion : socket
+            requete : typeRequete
+            reponse : typeReponse
+            code_erreur : entier
+        Début
+            TantQue(Vrai) Faire
+                /* attente de connexion */
+                connexion <- attenteConnexion()
 
-            # traitement de la requete
-            TantQue(connexion != TERMINE) Faire
-                requete <- ecouterPort(connexion)
-                reponse <- traiterRequete(connexion, requete)
-                envoyer_reponse(connexion, reponse)
+                /* authentification de l'utilisateur */
+                Faire
+                    requete <- ecouterPort(connexion)
+                    reponse <- authentification(requete)
+                    envoyer_reponse(connexion, reponse)
+                TantQue(connexion != AUTHENTIFICATION_OK)
+
+                /* traitement de la requete */
+                TantQue(connexion != TERMINE) Faire
+                    requete <- ecouterPort(connexion)
+                    reponse <- traiterRequete(connexion, requete)
+                    envoyer_reponse(connexion, reponse)
+                
+                deconnecter(connexion)
+        Fin
+
+    Algorithme client
+        /* Rôle : Gérer les actions utilisateur et communiquer avec le serveur */
+        Variable
+
+        Début
+            TantQue(Vrai) Faire
+                /* utilisateur choisi une action */
+                action <- obtenirAction()
+
+                /* construction de la requete */
+                requete <- construireRequete()
+
+                /* envoi de la requete au serveur */
+                envoyer_requete(connexion, requete)
+
+                /* affichage de l'état de la requete */
+                code_erreur <- ecouterPort(connexion)
+                Ecrire("Code erreur : ", code_erreur)
             
-            deconnecter(connexion)
-
-        TantQue(Vrai) Faire
-            # utilisateur choisi une action
-            action <-
-while true:
-    #user chooses an action
-    action = getAction()
-
-    #request is built
-    request = buildRequest(action)
-
-    #and sent to the server
-    send_request(request)
-
-    #then the client displays success or failure
-    error_code = listenForRequest()
-    display(error_code)
-
 
 __SECOND RAFFINAGE
 
-function auth(connexion, request):
-    #check if type is AUTH or QUIT
-    #if QUIT then stop there
-    #else:
-        #check hash and user from request
-        #if correct :
-            #designate the connexion has authentified
-            return error_code
-        #else:
-            #return auth error
-
-
-
-function add():
-    #case user:
-        #check if connexion is admin
-        #check if user exists
-        #add new user and directory file path to the users file
-        #create new directory file
-        #return error_code
+    Fonction authentification(connexion : socket, requete : typeRequete)
+        /* Rôle : vérifier la conformité des identifiants de connexion reçu, et autoriser ou rejeter en conséquence */
+        
+        Si(requete.typeRequete == "QUIT") Alors
+            /* fermeture de la connection si la requete est de type QUIT */
+            connexion.fermer()
+        Sinon
+            /* verification du couple identifiant/mot de passe dans le fichier*/
+            Si(identifiant ET mot_de_passe corrects) Alors
+                code_erreur <- 200
+                retourner code_erreur
+            Sinon
+                code_erreur <- 403
     
-    #case contact:
-        #open user's directory file
-        #check if contact doesn't already exists
-        #add contact to file
+    Fonction ajouterRessource(ressource : obj)
+        /* Rôle : ajout d'un utilsateur dans les fichiers de données*/
+
+        Début        
+            Selon type(ressource) Dans
+
+                typeUtilisateur:    
+                    Si (utilisateurExiste(utilisateur) == VRAI) Alors
+                        code_erreur <- 409
+                        retourner code_erreur
+                    Sinon
+                        /* ajouter identifiants utilisateur dans fichier d'identifiants */
+                        /* créer fichier annuaire vide pour utilisateur nouvellement créé */
+
+                        code_erreur <- 200
+                        retourner code_erreur
+                
+                typeContact:
+                    /* ouvrir fichier en mode lecture et sérialisation des données dans l'enregistrement annuaire */
+                    Si(contactExiste(annuaire, contact)) Alors
+                        code_erreur <- 409
+                        retourner code_erreur
+                    Sinon
+                        annuaire.ajouterContact(contact)
+                        /* ouvrir fichier en mode écriture*/
+
+                        code_erreur <- 200
+                        retourner code_erreur  
+                Sinon
+                    code_erreur <- 409
+                    retourner code_erreur
+        Fin
+
+    Fonction supprimerRessource(ressource : obj)
+        /* Rôle : Supprimer ressource du fichier de données */
+        
+        Début        
+            Selon type(ressource) Dans
+
+                typeUtilisateur:    
+                    Si (utilisateurExiste(utilisateur) == VRAI) Alors
+                        /* retirer identifiants utilisateur du fichier d'identifiants */
+                        /* supprimer fichier annuaire de l'utilisateur */
+
+                        code_erreur <- 200
+                        retourner code_erreur
+                    Sinon
+                        code_erreur <- 409
+                        retourner code_erreur
+                
+                typeContact:
+                    /* ouvrir fichier en mode lecture et sérialisation des données dans l'enregistrement annuaire */
+                    Si(contactExiste(annuaire, contact) == VRAI ) Alors
+                        annuaire.supprimerContact(contact)
+                        /* ouvrir fichier en mode écriture et sérialisation de l'objet annuaire */
+
+                        code_erreur <- 200
+                        retourner code_erreur  
+                    Sinon
+                        code_erreur <- 409
+                        retourner code_erreur
+                Sinon
+                    code_erreur <- 409
+                    retourner code_erreur
+        Fin
+     
+    Fonction modifier(requete : typeRequete)
+        /* Rôle : Modification du contact */
+        
+
+    function edit():
+        #check if contact exists in user's directory
+        #edit the contact's properties
+        #return error_code 
+
+
+    function get():
+        #case directory:
+            #check if directory/user exists
+            #check if user has permission
+            #open the directory
+            #send content to client
+            #return error_code
+
+        #case contact:
+            #check if directory exists
+            #check if contact exists
+            #check if user has permission
+            #open the directory
+            #send contact's content to client
+            #return error_code
+
+        #case allowed directories:
+            #send list of directories to client
+            return error_code
+
+
+    function allow():
+        #check if users exist
+        #for each user:
+            #add permission to user
         #return error_code
 
 
-
-function delete():
-    #case user:
-        #check if user exists
-        #delete user from file
-        #delete linked directory
-        #return error_code
-    #case contact:
-        #open user's directory
+    function search():
         #check if contact exists
-        #delete contact from the directory
+        #send contact info to client
         #return error_code
 
 
-function edit():
-    #check if contact exists in user's directory
-    #edit the contact's properties
-    #return error_code 
-
-
-function get():
-    #case directory:
-        #check if directory/user exists
-        #check if user has permission
-        #open the directory
-        #send content to client
+    function quit():
+        #stop the connexion
         #return error_code
 
-    #case contact:
-        #check if directory exists
-        #check if contact exists
-        #check if user has permission
-        #open the directory
-        #send contact's content to client
-        #return error_code
 
-    #case allowed directories:
-        #send list of directories to client
-        return error_code
-
-
-function allow():
-    #check if users exist
-    #for each user:
-        #add permission to user
-    #return error_code
-
-
-function search():
-    #check if contact exists
-    #send contact info to client
-    #return error_code
-
-
-function quit():
-    #stop the connexion
-    #return error_code
-
-
-function process(request):
-    #case ADD:
-        #return add(request)
-    #case DELETE:
-        #return delete(request)
-    #case EDIT:
-        #return edit(request)
-    #case GET:
-        #return get(request)
-    #case ALLOW:
-        #return allow(request)
-    #case SEARCH:
-        #return search(request)
-    #case QUIT:
-        quit()
+    function process(request):
+        #case ADD:
+            #return add(request)
+        #case DELETE:
+            #return delete(request)
+        #case EDIT:
+            #return edit(request)
+        #case GET:
+            #return get(request)
+        #case ALLOW:
+            #return allow(request)
+        #case SEARCH:
+            #return search(request)
+        #case QUIT:
+            quit()
