@@ -1,6 +1,5 @@
 # from request import *
 from classes import *
-
 def handle_client(conn, addr):
     pass
 
@@ -13,11 +12,11 @@ def creerUtilisateur(utilisateur : Utilisateur):
     nom_fichier = "annuaire_"+utilisateur.identifiant+".json"
     with open("server/annuaire/"+nom_fichier,'w') as fichier:
         # Ouverture du fichier en mode écriture et écriture de l'annuaire sérialisé
-        fichier.write(utilisateur.annuaire.dump())
+        utilisateur.annuaire.dump(fichier)
     
-    with open("identifiants.txt", "a") as fichier_id:
-        # Ouverture du fichier en mode ajout et écriture des identifiants de connexion
-        fichier_id.write(utilisateur.identifiant+' '+utilisateur.password+'\n')
+    #with open("identifiants.txt", "a") as fichier_id:
+    #  # Ouverture du fichier en mode ajout et écriture des identifiants de connexion
+    #    fichier_id.write(utilisateur.identifiant+' '+utilisateur.password+'\n')
 
 def ajouterContact(utilisateur : Utilisateur, contact : Contact):
     """
@@ -29,27 +28,27 @@ def ajouterContact(utilisateur : Utilisateur, contact : Contact):
     
     with open("server/annuaire/"+nom_fichier,'w') as fichier:
         # Ouverture du fichier en mode écriture et écriture de l'annuaire sérialisé mis à jour
-        fichier.write(utilisateur.annuaire.dump())
+        utilisateur.annuaire.dump(fichier)
 
 def rechercherContact(utilisateur : Utilisateur, *args, **kwargs):
     """
     Fonction permettant de chercher dans la liste des annuaires accordées le contact demandé
     """
-    nom = kwargs.get("nom", None)
-    prenom = kwargs.get("prenom", None)
-    telephone = kwargs.get("telephone", None)
-    courriel = kwargs.get("courriel", None)
-    adresse = kwargs.get("adresse", None)
+    nom = kwargs.get("nom", '')
+    prenom = kwargs.get("prenom", '')
+    telephone = kwargs.get("telephone", '')
+    courriel = kwargs.get("courriel", '')
+    adresse = kwargs.get("adresse", '')
 
     reference = Contact(nom, prenom, telephone, courriel, adresse)
 
     
     for annuaire in utilisateur.acces:
         with open(f"server/annuaire/{annuaire}.json","r") as fichier_annuaire:
-            donneesAnnuaireBrut = fichier_annuaire.read()
-            print(donneesAnnuaireBrut)
-            #annuaire_lu = Annuaire().load(fichier_annuaire)
-        annuaire_lu = Annuaire(loadFromString=True, string=donneesAnnuaireBrut)
+            #donneesAnnuaireBrut = fichier_annuaire.read()
+            #print(donneesAnnuaireBrut)
+            annuaire_lu = json.load(fichier_annuaire, object_hook=convert_to_obj)
+        #annuaire_lu = Annuaire(loadFromString=True, string=donneesAnnuaireBrut)
         print(f"server/annuaire/{annuaire}.json de len:",len(annuaire_lu.contacts))
         print(annuaire_lu.__str__())
 
@@ -59,7 +58,7 @@ def rechercherContact(utilisateur : Utilisateur, *args, **kwargs):
 
             for attribut_reference, attribut_contact in vars(reference).items(), vars(contact).items:
                 
-                if attribut_reference == None:
+                if attribut_reference == '':
                     continue
                 if attribut_reference == attribut_contact:
                     correspondance = True
