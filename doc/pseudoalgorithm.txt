@@ -7,8 +7,8 @@ __PREMIER RAFFINAGE
             TERMINE <- 000
         Variable
             connexion : socket
-            requete : typeRequete
-            reponse : typeReponse
+            requete : Requete
+            reponse : Reponse
             code_erreur : entier
         Début
             TantQue(Vrai) Faire
@@ -34,7 +34,11 @@ __PREMIER RAFFINAGE
     Algorithme client
         /* Rôle : Gérer les actions utilisateur et communiquer avec le serveur */
         Variable
-
+            connexion : socket
+            requete : Requete
+            reponse : Reponse
+            code_erreur : entier
+            action : string
         Début
             TantQue(Vrai) Faire
                 /* utilisateur choisi une action */
@@ -49,6 +53,7 @@ __PREMIER RAFFINAGE
                 /* affichage de l'état de la requete */
                 code_erreur <- ecouterPort(connexion)
                 Ecrire("Code erreur : ", code_erreur)
+        Fin
             
 
 __SECOND RAFFINAGE
@@ -135,7 +140,7 @@ __SECOND RAFFINAGE
      
     Fonction modifier(requete : typeRequete)
         /* Rôle : Modification du contact */
-        
+
 
     function edit():
         #check if contact exists in user's directory

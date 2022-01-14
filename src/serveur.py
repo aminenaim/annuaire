@@ -10,13 +10,15 @@ def creerUtilisateur(utilisateur : Utilisateur):
     Fonction créant un fichier annuaire pour l'utilisateur passé en parametre
     """
     nom_fichier = "annuaire_"+utilisateur.identifiant+".json"
-    with open("server/annuaire/"+nom_fichier,'w') as fichier:
+
+    with open("serveur/identifiants.txt", "a") as fichier_id:
+     # Ouverture du fichier en mode ajout et écriture des identifiants de connexion
+       fichier_id.write(utilisateur.identifiant+' '+utilisateur.password)
+
+    with open("serveur/annuaire/"+nom_fichier,'w') as fichier:
         # Ouverture du fichier en mode écriture et écriture de l'annuaire sérialisé
         utilisateur.annuaire.dump(fichier)
     
-    #with open("identifiants.txt", "a") as fichier_id:
-    #  # Ouverture du fichier en mode ajout et écriture des identifiants de connexion
-    #    fichier_id.write(utilisateur.identifiant+' '+utilisateur.password+'\n')
 
 def ajouterContact(utilisateur : Utilisateur, contact : Contact):
     """
@@ -26,7 +28,7 @@ def ajouterContact(utilisateur : Utilisateur, contact : Contact):
 
     nom_fichier = f"annuaire_{utilisateur.identifiant}.json"
     
-    with open("server/annuaire/"+nom_fichier,'w') as fichier:
+    with open("serveur/annuaire/"+nom_fichier,'w') as fichier:
         # Ouverture du fichier en mode écriture et écriture de l'annuaire sérialisé mis à jour
         utilisateur.annuaire.dump(fichier)
 
@@ -41,45 +43,56 @@ def rechercherContact(utilisateur : Utilisateur, *args, **kwargs):
     adresse = kwargs.get("adresse", '')
 
     reference = Contact(nom, prenom, telephone, courriel, adresse)
+    
     liste_correspondance = []
     
     for annuaire in utilisateur.acces:
-        with open(f"server/annuaire/{annuaire}.json","r") as fichier_annuaire:
+        with open(f"serveur/annuaire/{annuaire}.json","r") as fichier_annuaire:
             annuaire_lu = json.load(fichier_annuaire, object_hook=convert_to_obj)
 
         for contact in annuaire_lu.contacts:
             correspondance = False
 
-            for attribut_reference, attribut_contact in zip(vars(reference).items(), vars(contact).items()):
-                print("ref(",attribut_reference,") et comp(",attribut_contact,"")
-                if attribut_reference == None or attribut_contact == None:
+            liste_attribut_reference = [tuple[1] for tuple in list(vars(reference).items())]
+            liste_attribut_contact = [tuple[1] for tuple in list(vars(contact).items())]
+
+            for attribut_reference, attribut_contact in zip(liste_attribut_reference, liste_attribut_contact):
+                
+                if attribut_reference == '' or attribut_contact == '':
                     continue
-                if attribut_reference == attribut_contact:
+                elif attribut_reference == attribut_contact:
                     correspondance = True
                 else:
                     correspondance = False
                     break
-            liste_correspondance.append(contact)
-        set(liste_correspondance)
-        
-        print(liste_correspondance)
+            if correspondance == True:
+                liste_correspondance.append(contact)
+    
+    set(liste_correspondance)
+    print("nb correspondance:", len(liste_correspondance))
+    
+    
 def main():
     print("[STARTING]   server is starting...")
     print("[LISTENING]  server is listening")
     
-    user1 = Utilisateur("aminenaim", "pwd")
-    user2 = Utilisateur("axeldelas","pwdaxel")
+    with open("test/jeu_id.txt", 'r') as fichier_test:
+        for ligne in fichier_test:
+            ligne = ligne.split(";")
+            user = Utilisateur(ligne[0], ligne[1])
+            creerUtilisateur(user)
+
     
-    user1.addAcces("annuaire_axeldelas")
+    # user1.addAcces("annuaire_axeldelas")
     
-    ctc = Contact("Andre", "Aoun", "0123456789","andre.aoun@mail.fr","1 Impasse Sanzissu 31000 TOULOUSE")
+    # ctc = Contact("Aoun", "Andre", "0123456789","andre.aoun@mail.fr","1 Impasse Sanzissu 31000 TOULOUSE")
     
-    creerUtilisateur(user1)
-    creerUtilisateur(user2)
+    # creerUtilisateur(user1)
+    # creerUtilisateur(user2)
     
-    ajouterContact(user2, ctc)
+    # ajouterContact(user2, ctc)
     
-    rechercherContact(user1, nom="Andre")
+    # rechercherContact(user1, prenom="Andre", telephone="0123456789")
 
 if __name__ == "__main__":
     main()
