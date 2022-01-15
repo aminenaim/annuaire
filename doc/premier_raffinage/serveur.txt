@@ -1,0 +1,30 @@
+Algorithme Serveur
+    /* Rôle : Gérer les connexions clients */
+    Constante
+        AUTHENTIFICATION_OK <- 200
+        TERMINE <- 000
+    Variable
+        connexion : socket
+        requete : trequete
+        reponse : Reponse
+        code_erreur : entier
+    Début
+        TantQue(Vrai) Faire
+            /* attente de connexion */
+            connexion <- attenteConnexion()
+
+            /* authentification de l'utilisateur */
+            Faire
+                requete <- ecouterPort(connexion)
+                reponse <- authentification(requete)
+                envoyer_reponse(connexion, reponse)
+            TantQue(connexion != AUTHENTIFICATION_OK)
+
+            /* traitement de la requete */
+            TantQue(connexion != TERMINE) Faire
+                requete <- ecouterPort(connexion)
+                reponse <- traiterRequete(connexion, requete)
+                envoyer_reponse(connexion, reponse)
+            
+            deconnecter(connexion)
+    Fin

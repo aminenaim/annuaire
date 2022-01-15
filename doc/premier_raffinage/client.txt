@@ -1,0 +1,23 @@
+Algorithme client
+    /* Rôle : Gérer les actions utilisateur et communiquer avec le serveur */
+    Variable
+        connexion : socket
+        requete : trequete
+        reponse : Reponse
+        code_erreur : entier
+        action : string
+    Début
+        TantQue(Vrai) Faire
+            /* utilisateur choisi une action */
+            action <- obtenirAction()
+
+            /* construction de la requete */
+            requete <- construireRequete()
+
+            /* envoi de la requete au serveur */
+            envoyer_requete(connexion, requete)
+
+            /* affichage de l'état de la requete */
+            code_erreur <- ecouterPort(connexion)
+            Ecrire("Code erreur : ", code_erreur)
+    Fin

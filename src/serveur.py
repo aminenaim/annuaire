@@ -1,19 +1,27 @@
 # from request import *
 from classes import *
-def handle_client(conn, addr):
-    pass
-
 
 def creerUtilisateur(utilisateur : Utilisateur):
     """
     Fonction ajoutant les identifiants de connexion de l'utilisateur dans un fichier centralisé
     Fonction créant un fichier annuaire pour l'utilisateur passé en parametre
+
+    src/
+    ├─ __pycache__/
+    ├─ serveur/
+    │  ├─ annuaire/
+    │  │  └─ annuaire_{utilisateur.identifiant}.json  <-- Création du fichier annuaire de l'utilisateur
+    │  └─ identifiants.txt                            <-- Ajout des identifiants de connexion de l'utilisateur
+    ├─ test/
+    ├─ classes.py
+    └─ serveur.py
+
     """
     nom_fichier = "annuaire_"+utilisateur.identifiant+".json"
 
     with open("serveur/identifiants.txt", "a") as fichier_id:
-     # Ouverture du fichier en mode ajout et écriture des identifiants de connexion
-       fichier_id.write(utilisateur.identifiant+' '+utilisateur.password)
+        # Ouverture du fichier en mode ajout et écriture des identifiants de connexion
+        fichier_id.write(utilisateur.identifiant+' '+utilisateur.password)
 
     with open("serveur/annuaire/"+nom_fichier,'w') as fichier:
         # Ouverture du fichier en mode écriture et écriture de l'annuaire sérialisé
@@ -23,8 +31,18 @@ def creerUtilisateur(utilisateur : Utilisateur):
 def ajouterContact(utilisateur : Utilisateur, contact : Contact):
     """
     Fonction ajoutant un contact dans l'annuaire de l'utilisateur passé en paramètre
+
+    src/
+    ├─ __pycache__/
+    ├─ serveur/
+    │  ├─ annuaire/
+    │  │  └─ annuaire_{utilisateur.identifiant}.json  <-- Mise à jour du fichier annuaire
+    │  └─ identifiants.txt                            
+    ├─ test/
+    ├─ classes.py
+    └─ serveur.py
     """
-    utilisateur.annuaire.contacts.append(contact)
+    utilisateur.annuaire.contacts.addContact(contact)
 
     nom_fichier = f"annuaire_{utilisateur.identifiant}.json"
     
@@ -70,29 +88,3 @@ def rechercherContact(utilisateur : Utilisateur, *args, **kwargs):
     
     set(liste_correspondance)
     print("nb correspondance:", len(liste_correspondance))
-    
-    
-def main():
-    print("[STARTING]   server is starting...")
-    print("[LISTENING]  server is listening")
-    
-    with open("test/jeu_id.txt", 'r') as fichier_test:
-        for ligne in fichier_test:
-            ligne = ligne.split(";")
-            user = Utilisateur(ligne[0], ligne[1])
-            creerUtilisateur(user)
-
-    
-    # user1.addAcces("annuaire_axeldelas")
-    
-    # ctc = Contact("Aoun", "Andre", "0123456789","andre.aoun@mail.fr","1 Impasse Sanzissu 31000 TOULOUSE")
-    
-    # creerUtilisateur(user1)
-    # creerUtilisateur(user2)
-    
-    # ajouterContact(user2, ctc)
-    
-    # rechercherContact(user1, prenom="Andre", telephone="0123456789")
-
-if __name__ == "__main__":
-    main()

@@ -1,0 +1,388 @@
+Algorithme Serveur
+    /* Second raffinage du serveur pour recevoir les requetes et les traiter en fonction du type de requete */
+    Type 
+        /* type enregistrement pour les requetes */
+        trequete = enregistrement 
+                        typeRequete : Entier
+                        typeCible : Entier
+                        taille : Entier
+                        chargeUtile : Chaine
+                finenreg
+        /* type enregistrement pour les reponses */
+        treponse = enregistrement 
+                        typeRequete : Entier
+                        code_erreur : Entier
+                        taille : Entier
+                finenreg
+    Variable
+        reponse : treponse
+        requete : trequete
+    Début
+
+        Ecrire("[INFO] Lancement du serveur ...")
+    
+        Fonction authentification(requete : trequete)
+            /* Rôle : vérifier la conformité des identifiants de connexion reçu, et autoriser ou rejeter en conséquence */
+            Type 
+                treponse = enregistrement 
+                                typeRequete : Entier
+                                code_erreur : Entier
+                                taille : Entier
+                        finenreg
+            Variable
+                reponse : treponse
+            Début
+                Si(identifiant ET mot_de_passe corrects) Alors
+                    /* verification du couple identifiant/mot de passe dans le fichier*/
+
+                    reponse.code_erreur <- 200
+                    reponse.chargeUtile <- "Authentification réussie"
+                    
+                    Ecrire("[INFO] Authentification établie")
+
+                Sinon
+                    reponse.code_erreur <- 403
+                    reponse.chargeUtile <- "Identifiants incorrects"
+                                    
+                reponse.taille = taille(reponse.chargeUtile)
+                retourner reponse
+            Fin
+            
+        /* ------------------------------ */
+
+        Fonction ajouterRessource(ressource : obj)
+            /* Rôle : ajout d'un utilsateur dans les fichiers de données*/
+            Type 
+                treponse = enregistrement 
+                                typeRequete : Entier
+                                code_erreur : Entier
+                                taille : Entier
+                        finenreg
+            Variable
+                reponse : treponse
+            Début        
+                Selon type(ressource) Dans
+
+                    typeUtilisateur:    
+                        Si (utilisateurExiste(utilisateur) == VRAI) Alors
+                            reponse.code_erreur <- 409
+                            reponse.chargeUtile <- "Ressource déjà existante"
+
+                        Sinon
+                            /* ajouter identifiants utilisateur dans fichier d'identifiants */
+                            /* créer fichier annuaire vide pour utilisateur nouvellement créé */
+
+                            reponse.code_erreur <- 200
+                            reponse.chargeUtile <- "Ressource ajoutée"
+                    
+                    typeContact:
+                        /* ouvrir fichier en mode lecture et sérialisation des données dans l'enregistrement annuaire */
+                        Si(contactExiste(annuaire, contact)) Alors
+                            reponse.code_erreur <- 409
+                            reponse.chargeUtile <- "Ressource déjà existante"
+
+                        Sinon
+                            annuaire.ajouterContact(contact)
+                            /* ouvrir fichier en mode écriture*/
+                            fichier <- Ouvrir("nom_fichier", "ECRITURE")
+                            fichier.ecrire(annuaire.serialiser())
+                            fichier.fermer()
+
+                            reponse.code_erreur <- 200
+                            reponse.chargeUtile <- "Ressource ajoutée"
+
+                    Sinon
+                        reponse.code_erreur <- 409
+                        reponse.chargeUtile <- "Ressource déjà existante"
+
+                reponse.taille = taille(reponse.chargeUtile)
+                retourner reponse
+            Fin
+
+        /* ------------------------------ */
+
+        Fonction supprimerRessource(requete : trequete)
+            /* Rôle : Supprimer ressource du fichier de données */
+            Type 
+                treponse = enregistrement 
+                                typeRequete : Entier
+                                code_erreur : Entier
+                                taille : Entier
+                        finenreg
+            Variable
+                reponse : treponse
+            Début        
+                Selon type(ressource) Dans
+
+                    typeUtilisateur:    
+                        Si (utilisateurExiste(ressource) == VRAI) Alors
+                            /* retirer identifiants utilisateur du fichier d'identifiants */
+                            /* supprimer fichier annuaire de l'utilisateur */
+
+                            reponse.code_erreur <- 200
+
+                        Sinon
+                            reponse.code_erreur <- 409
+                    
+                    typeContact:
+                        /* ouvrir fichier en mode lecture et sérialisation des données dans l'enregistrement annuaire */
+                        
+                        Si(contactExiste(ressource, contact) == VRAI ) Alors
+                            ressource.supprimerContact(contact)
+                            /* ouvrir fichier en mode écriture et sérialisation de l'objet annuaire */
+                            reponse.code_erreur <- 200
+
+                        Sinon
+                            reponse.code_erreur <- 409
+                    Sinon
+                        reponse.code_erreur <- 409
+
+                reponse.taille = taille(reponse.chargeUtile)
+                retourner reponse
+            Fin
+
+        /* ------------------------------ */
+
+        Fonction modifier(requete : trequete)
+            /* Rôle : Modification de l'utilisateur ou du contact */
+            Type 
+                treponse = enregistrement 
+                                typeRequete : Entier
+                                code_erreur : Entier
+                                taille : Entier
+                        finenreg
+            Variable
+                reponse : treponse
+                nom_fichier : Chaine
+                fichier : Fichier
+                identifiant : Chaine
+                password : Chaine
+            Début
+                ressource <- requete.chargeUtile
+
+                Si (utilisateurExiste(ressource) == VRAI) Alors
+                    nom_fichier <- "utilisateur_"+ressource.identifiant
+                    Ouvrir(nom_fichier, "ECRITURE")
+                    
+                    nom_fichier.ecrire(ressource.serialiser())
+                    nom_fichier.fermer()
+                    
+                    reponse.code_erreur <- 200
+                    reponse.chargeUtile <- "Utilisateur modifié avec succès"
+
+                Sinon
+                    reponse.code_erreur <- 404
+                    reponse.chargeUtile <- "Utilisateur non trouvé"
+
+                retourner reponse
+            Fin
+
+        /* ------------------------------ */
+
+        Fonction obtenir(requete : trequete)
+            /* Rôle : Obtenir ressource */
+            Type 
+                treponse = enregistrement 
+                                typeRequete : Entier
+                                code_erreur : Entier
+                                taille : Entier
+                                chargeUtile : Chaine
+                        finenreg
+            Variable
+                reponse : treponse
+                nom_fichier : Chaine
+                fichier : Fichier
+                donnees_utilisateur : Chaine
+            Début
+                ressource <- requete.chargeUtile
+
+                Si (utilisateurExiste(ressource) == VRAI) Alors
+                    nom_fichier <- "utilisateur_"+ressource.identifiant
+                    fichier <- Ouvrir(nom_fichier, "LECTURE")
+                    
+                    donnees_utilisateur <- fichier.lire()
+                    fichier.fermer()
+                        
+                    Si (requete.typeCible == "01") Alors
+                        /* 01 correspond au code pour une cible de type utilisateur */
+                        reponse.chargeUtile <- donnees_utilisateur
+                        reponse.code_erreur <- 200
+
+                    SinonSi (requete.typeCible == "10") Alors
+                        /* 10 correspond au code pour une cible de type annuaire */
+                        reponse.chargeUtile <- donnees_utilisateur.deserialiser().annuaire
+                        reponse.code_erreur <- 200
+                    
+                    SinonSi (requete.typeCible == "11") Alors
+                        /* 11 correspond au code pour une cible de type contact */
+                        reponse.chargeUtile <- donnees_utilisateur.deserialiser().annuaire.contact[requete.cible].serialiser()
+                        reponse.code_erreur <- 200
+                    Sinon
+                        reponse.code_erreur <- 404
+                        reponse.chargeUtile <- "type de cible nul"
+                Sinon
+                    reponse.code_erreur <- 404
+                    reponse.chargeUtile <- "Utilisateur non trouvé"
+
+                reponse.taille = taille(reponse.chargeUtile)
+                retourner reponse
+            Fin
+
+        /* ------------------------------ */
+
+        Fonction autoriser(requete : treponse)
+            /* Rôle : Autoriser un autre client à consulter mon annuaire */
+            Type 
+                treponse = enregistrement 
+                                typeRequete : Entier
+                                code_erreur : Entier
+                                taille : Entier
+                                chargeUtile : Chaine
+                        finenreg
+            Variable
+                reponse : treponse
+                nom_fichier : Chaine
+                fichier : Fichier
+                donnees_utilisateur : Chaine
+            Début
+                ressource <- requete.chargeUtile.deserialiser()
+
+                Si (utilisateurExiste(ressource) == VRAI) Alors
+                    utilisateur_a_autoriser <- ressource.identifiant
+
+                    Si (utilisateurExiste(utilisateur_a_autoriser) == VRAI) Alors
+                        ressource.annuaire.acces.ajoute(utilisateur_a_autoriser)
+                        reponse.code_erreur <- 200
+                    Sinon
+                        reponse.code_erreur <- 404
+                        reponse.chargeUtile <- "Utilisateur à autoriser inexistant"
+                Sinon
+                    reponse.code_erreur <- 404
+                    reponse.chargeUtile <- "Utilisateur inexistant"
+
+
+                reponse.taille = taille(reponse.chargeUtile)
+                retourner reponse
+            Fin
+
+        /* ------------------------------ */
+
+        Fonction rechercherContact(requete : treponse)
+            /* Rôle : Autoriser un autre client à consulter mon annuaire */
+            Type 
+                treponse = enregistrement 
+                                typeRequete : Entier
+                                code_erreur : Entier
+                                taille : Entier
+                                chargeUtile : Chaine
+                        finenreg
+            Variable
+                reponse : trequete
+                nom_fichier : Chaine
+                fichier : Fichier
+                donnees_annuaire : Chaine
+                annuaire : tannuaire
+                correspondance : Booléen
+            Début
+                ressource <- requete.chargeUtile.deserialiser()
+
+                Si (utilisateurExiste(ressource) == VRAI) Alors
+                    
+                    Pour nom_annuaire dans ressource.annuaire.acces
+                        correspondance <- FAUX
+                        fichier <- Ouvrir(nom_annuaire, "LECTURE")
+                        donnees_annuaire <- fichier.lire()
+                        annuaire <- donnees_annuaire.deserialiser()
+
+                        Pour contact dans annuaire
+                            Si (ressource.contactReference == contact)
+                                reponse.chargeUtile <- contact.serialiser()
+                                reponse.code_erreur <- 200
+                                correspondance <- VRAI
+                            Sinon
+                                correspondance <- FAUX
+                    
+                    reponse.code_erreur <- 404
+                    reponse.chargeUtile <- "Contact inexistant"
+                Sinon
+                    reponse.code_erreur <- 404
+                    reponse.chargeUtile <- "Utilisateur inexistant"
+
+                reponse.taille = taille(reponse.chargeUtile)
+                retourner reponse
+            Fin
+
+        /* ------------------------------ */
+
+        Procédure quitter(connexion : socket, requete : trequete)
+            /* Rôle : cloturer connexion avec client*/
+            Type 
+                treponse = enregistrement 
+                                typeRequete : Entier
+                                code_erreur : Entier
+                                taille : Entier
+                                chargeUtile : Chaine
+                        finenreg
+            Variable
+                reponse : trequete
+            Début
+                reponse.typeRequete <- 111
+                reponse.code_erreur <- 200
+                reponse.chargeUtile <- ""
+                reponse.taille = taille(reponse.chargeUtile)
+                
+                connexion.envoyer(reponse)
+
+                connexion.cloturer()
+                Ecrire("[INFO] Connexion cloturée")
+            Fin
+
+        /* ------------------------------ */
+
+        Procédure traiter_requete(requete : trequete)
+            Type 
+                treponse = enregistrement 
+                                typeRequete : Entier
+                                code_erreur : Entier
+                                taille : Entier
+                                chargeUtile : Chaine
+                        finenreg
+            Variable
+                reponse : trequete
+            Début
+                Ecrire("[INFO] Requete de type"+requete.type)
+                Selon requete.type Dans
+                    000:
+                        reponse <- authentification(requete)
+                    001:
+                        reponse <- ajouterRessource(requete)
+                    010:
+                        reponse <- supprimerRessource(requete)
+                    011:
+                        reponse <- modifier(requete)
+                    100:
+                        reponse <- obtenir(requete)
+                    101:
+                        reponse <- autoriser(requete)
+                    110:
+                        reponse <- rechercherContact(requete)
+                    111:
+                        quitter(connexion, requete)
+                        arreter
+                connexion.envoyer(reponse.serialiser())
+
+                Ecrire("[INFO] "+reponse.chargeUtile)
+                Ecrire("[INFO] Reponse envoyée")
+            Fin    
+
+        /* ------------------------------ */
+
+        TantQue VRAI Faire
+            /* Ecoute du port en attente de requete */
+
+            requete <- ecouterPort(NUMEROPORT)
+            traiter_requete(requete)
+            Ecrire("[INFO] Requete arrivée en cours de traitement")
+        
+        FinTanQue
+    Fin
