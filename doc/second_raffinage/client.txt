@@ -1,0 +1,213 @@
+Algorithme Client
+    /* Second raffinage du serveur pour recevoir les requetes et les traiter en fonction du type de requete */
+    Type 
+        /* type enregistrement pour les requetes */
+        trequete = enregistrement 
+                        typeRequete : Entier
+                        typeCible : Entier
+                        taille : Entier
+                        chargeUtile : Chaine
+                finenreg
+        /* type enregistrement pour les reponses */
+        treponse = enregistrement 
+                        typeRequete : Entier
+                        code_erreur : Entier
+                        taille : Entier
+                finenreg
+            
+        tcontact = enregistrement
+                        nom : Chaine
+                        prenom : Chaine
+                        telephone : Chaine
+                        courriel : Chaine
+                        adresse : Chaine
+                finenreg
+
+        tannuaire = enregistrement
+                        contacts : Tableau tcontact[]
+                finenreg
+        tutilisateur = enregistrement
+                        identifiant : Chaine
+                        password : Chaine
+                        acces : Tableau Chaine[]
+                        annuaire : tannuaire
+                finenreg
+    Variable
+        reponse : treponse
+        requete : trequete
+        choix : Entier
+
+    Fonctions & Procédures
+
+        Fonction menuExterne() : tuple(Chaine, Chaine)
+            /* Rôle : Procédure affichant le menu quand utilisateur est authentifié  */
+            Type
+                trequete = enregistrement 
+                                typeRequete : Entier
+                                typeCible : Entier
+                                taille : Entier
+                                chargeUtile : Chaine
+                        finenreg
+            Variable
+                identifiant : Chaine
+                password : Chaine
+            Début
+
+                Ecrire("- Bienvenue sur votre service d’annuaires partagés -")
+                Lire("Identifiant : ", identifiant)
+                Lire("Mot de passe : ", password)
+                
+                retourner identifiant, password
+            Fin
+
+        Fonction menuInterne() : Entier
+            /* Rôle : Procédure affichant le menu quand utilisateur est authentifié  */
+            Variable 
+                choix : entier
+            Début            
+                Ecrire("Sélectionner l’action souhaitée:")
+                Ecrire("1 : Consulter l’annuaire")
+                Ecrire("2 : Rechercher dans l’annuaire")
+                Ecrire("3 : Consulter un annuaire distinct")
+                Ecrire("4 : Ajouter un contact")"
+                Ecrire("5 : Modifier l’annuaire")
+                Ecrire("6 : Supprimer un contact")
+                Ecrire("7 : Consulter les utilisateurs autorisés ˋa consulter mon annuaire")
+                Ecrire("8 : Autoriser un utilisateur ˋa consulter mon annuaire")
+                Ecrire("9 : Déconnexion")
+                Lire("Choix : ", choix)
+
+                retourner choix
+            Fin
+
+        Fonction traiter_choix() : requete
+            /* Rôle : traitement du choix du client */
+            Type
+                trequete = enregistrement 
+                                typeRequete : Entier
+                                typeCible : Entier
+                                taille : Entier
+                                chargeUtile : Chaine
+                        finenreg
+
+                tcontact = enregistrement
+                                nom : Chaine
+                                prenom : Chaine
+                                telephone : Chaine
+                                courriel : Chaine
+                                adresse : Chaine
+                        finenreg
+
+            Variable
+                requete : trequete
+
+            Début
+                Selon choix Dans
+                    /* construction de requete selon le choix du client */
+
+                    1:
+                        requete <- construireRequete(GET, ANNUAIRE, 0, Vide)
+                    2:
+                        requete <- construireRequete(SEARCH, ANNUAIRE, 38*8, "annuaire_"+identifiant)
+                    3:
+                        requete <- menu_choisir_annuaire()
+                    4:
+                        contact <- menu_ajouter_contact()
+                        requete <- construireRequete(ADD, CONTACT, taille(contact.serialiser()), contact.serialiser())
+                    5:
+                        requete <- construireRequete(EDIT, ANNUAIRE, taille(annuaire.serialiser()), annuaire.serialiser())
+                    6:
+                        requete <- construireRequete(DELETE, CONTACT, taille(annuaire.serialiser()), annuaire.serialiser())
+                    7:
+                        requete <- construireRequete(GET, UTILISATEUR, 0, Vide)
+                    8:
+                        utilisateur_a_autoriser <- menu_autoriser_utilisateur()
+                        requete <- construireRequete(ALLOW, UTILISATEUR, taille(utilisateur_a_autoriser), utilisateur_a_autoriser)
+                    9:
+                        requete <- construireRequete(QUIT, NULL, 0, Vide)
+                retourner requete
+            Fin
+        
+        Procédure traiter_reponse(reponse : treponse)
+            /* Rôle : traitement des reponses du serveur */
+
+            Variable
+                connexion : tconnexion
+
+            Début
+                Selon reponse.type Dans
+                    /* affichage de l'interface en fonction du type de la reponse */
+                    1:
+                        Ecrire("Contenu de votre annuaire :")
+                        Ecrire(reponse.chargeUtile)
+                    2:
+                        Ecrire("Résultat de recherche : ")
+                        Ecrire(reponse.chargeUtile)
+                    3:
+                        Ecrire("Annuaire : ")
+                        Ecrire(reponse.chargeUtile)
+                    4:
+                        Ecrire("Contact ajouté avec succès")
+                    5:
+                        Ecrire("Modification : ")
+                        Ecrire(reponse.chargeUtile)
+                    6:
+                        Ecrire("Suppression réalisée avec succès")
+        
+                    7:
+                        Ecrire("Utilisateur autorisés à consulter mon annuaire")
+                        utilisateur <- reponse.chargeUtile.serialiser()
+                        acces <- utilisateur.acces
+
+                        Pour i de 0 à taille(acces) [Par Pas De 1]
+                            Ecrire("- ", acces[i])
+                    8:
+                        Ecrire("Utilisateur autorisé avec succès)
+                    9:
+                        Ecrire("Fermeture session")
+                        connexion.cloturer()
+
+                        SortieProgramme
+            Fin
+    Début
+
+        connexion.initialiser(ADDRESSE, NUMEROPORT)
+
+        identifiant, password <- menuExterne()
+        
+        /* construction et envoi de la requete d'authentification */
+        requete <- construireRequete(**arguments)
+        connexion.envoyer(requete.serialiser())
+
+        /* ecoute du port et reception de la reponse */
+        reponse <- ecouterPort(NUMEROPORT)
+        reponse <- reponse.deserialiser()
+        
+        choix <- 0
+
+        /* traitement conditionnel de la reponse */
+        
+        Si (reponse.code_erreur == 200) Alors
+            /* cas où l'authentification a réussie */
+
+            TantQue VRAI Faire
+                /* boucle s'executant jusqu'à ce que le client se déconnecte */
+
+                TantQue (choix < 1 OU choix > 9) Faire
+                    choix <- menuInterne()
+                FinTanQue
+
+                requete <- traiter_choix()
+
+                connexion.envoyer(requete.serialiser())
+                reponse <- ecouterPort(NUMEROPORT)
+
+                Si reponse.type != 200:
+                    Ecrire("[ERREUR", reponse.code_erreur, "]", reponse.chargeUtile)
+                Sinon
+                    traiter_reponse(reponse)
+            FinTanQue
+
+        Sinon
+            Ecrire("Identifiants incorrects")
+    Fin

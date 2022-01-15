@@ -17,10 +17,8 @@ Algorithme Serveur
     Variable
         reponse : treponse
         requete : trequete
-    Début
-
-        Ecrire("[INFO] Lancement du serveur ...")
     
+    Fonctions & Procédures
         Fonction authentification(requete : trequete)
             /* Rôle : vérifier la conformité des identifiants de connexion reçu, et autoriser ou rejeter en conséquence */
             Type 
@@ -38,7 +36,7 @@ Algorithme Serveur
                     reponse.code_erreur <- 200
                     reponse.chargeUtile <- "Authentification réussie"
                     
-                    Ecrire("[INFO] Authentification établie")
+                    Ecrire("DEBUG : [INFO] Authentification établie")
 
                 Sinon
                     reponse.code_erreur <- 403
@@ -376,6 +374,9 @@ Algorithme Serveur
             Fin    
 
         /* ------------------------------ */
+    Début
+
+        Ecrire("[INFO] Lancement du serveur ...")
 
         TantQue VRAI Faire
             /* Ecoute du port en attente de requete */
