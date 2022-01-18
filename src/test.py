@@ -38,18 +38,20 @@ class testServeur(unittest.TestCase):
                 self.assertIsInstance(utilisateur, Utilisateur)         # objet 'utilisateur' est bien une instance de la classe 'Utilisateur'
                 self.assertIsInstance(utilisateur.annuaire, Annuaire)
                 self.assertIsInstance(utilisateur.annuaire.contacts, list)
-                print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:",utilisateur.annuaire.contacts[0])
+
                 # tests des attributs
                 self.assertEqual(utilisateur.identifiant, ligne[0])     # attribut 'identifiant' est de la bonne valeur
                 self.assertEqual(utilisateur.password, ligne[1])        # attribut 'password' est de la bonne valeur
                 self.assertEqual(len(utilisateur.annuaire.contacts), 0) # liste de contacts est bien vide
                 self.assertEqual(len(utilisateur.acces), 0)             # liste des annuaires accessibles vide
-                
+
+
+
                 # tests des méthodes
                 self.assertEqual(utilisateur.addAcces("annuaire_aminenm.json").acces[0], "annuaire_aminenm.json")
                 self.assertEqual(utilisateur.getAcces(), ["annuaire_aminenm.json"])
                 self.assertEqual(utilisateur.removeAcces("annuaire_aminenm.json").acces, [] )
-
+                
     
     def test_creerUtilisateur(self):
         """
@@ -82,7 +84,8 @@ class testServeur(unittest.TestCase):
         """
 
         nom_fichier_test_contact = "test/jeu_contact.txt"
-        
+        print("[TEST] ajouterContact")
+
         utilisateur = Utilisateur("aminenm","e888b69bd484efa688bca24eeeed5ae520f182176f415604bbb83ce9cb360624")
         creerUtilisateur(utilisateur)
 
@@ -100,9 +103,11 @@ class testServeur(unittest.TestCase):
 
                     annuaire = json.load(fichier_annuaire, object_hook=convert_to_obj)
 
-                    self.assertEqual(annuaire.contacts[-1], contact)
-
-
+                    self.assertEqual(annuaire.contacts[-1].nom, contact.nom)
+                    self.assertEqual(annuaire.contacts[-1].prenom, contact.prenom)
+                    self.assertEqual(annuaire.contacts[-1].telephone, contact.telephone)
+                    self.assertEqual(annuaire.contacts[-1].courriel, contact.courriel)
+                    self.assertEqual(annuaire.contacts[-1].adresse, contact.adresse)
 
                 
 
@@ -121,6 +126,9 @@ class testServeur(unittest.TestCase):
         with open("serveur/identifiants.txt", "w") as fichier_id:
             print("[INFO] nettoyage du fichier serveur/identifiant.txt")
             fichier_id.truncate(0)
-            
-if __name__ == "__main__":
-    unittest.main(verbosity=1)
+test = testServeur()
+
+test.test_constructeurUtilisateur()
+test.test_creerUtilisateur()
+test.test_ajouterContact()
+test.tearDownClass()
