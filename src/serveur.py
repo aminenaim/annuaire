@@ -28,6 +28,8 @@ def creerUtilisateur(utilisateur : Utilisateur):
         utilisateur.annuaire.dump(fichier)
     
 
+
+
 def ajouterContact(utilisateur : Utilisateur, contact : Contact):
     """
     Fonction ajoutant un contact dans l'annuaire de l'utilisateur passé en paramètre
@@ -42,13 +44,16 @@ def ajouterContact(utilisateur : Utilisateur, contact : Contact):
     ├─ classes.py
     └─ serveur.py
     """
-    utilisateur.annuaire.contacts.addContact(contact)
+    utilisateur.annuaire.addContact(contact)
 
     nom_fichier = f"annuaire_{utilisateur.identifiant}.json"
     
     with open("serveur/annuaire/"+nom_fichier,'w') as fichier:
         # Ouverture du fichier en mode écriture et écriture de l'annuaire sérialisé mis à jour
         utilisateur.annuaire.dump(fichier)
+
+
+
 
 def rechercherContact(utilisateur : Utilisateur, *args, **kwargs):
     """
@@ -70,7 +75,7 @@ def rechercherContact(utilisateur : Utilisateur, *args, **kwargs):
 
         for contact in annuaire_lu.contacts:
             correspondance = False
-
+            
             liste_attribut_reference = [tuple[1] for tuple in list(vars(reference).items())]
             liste_attribut_contact = [tuple[1] for tuple in list(vars(contact).items())]
 
@@ -83,6 +88,7 @@ def rechercherContact(utilisateur : Utilisateur, *args, **kwargs):
                 else:
                     correspondance = False
                     break
+
             if correspondance == True:
                 liste_correspondance.append(contact)
     

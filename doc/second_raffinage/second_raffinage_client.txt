@@ -36,6 +36,21 @@ Algorithme Client
         reponse : treponse
         requete : trequete
         choix : Entier
+    
+    Constante
+        AUTH <- 000
+        ADD <- 001
+        DELETE <- 010
+        EDIT <- 011
+        GET <- 100
+        ALLOW <- 101
+        SEARCH <- 110
+        QUIT <- 111
+        
+        NULL <- 00
+        UTILISATEUR <- 01
+        ANNUAIRE <- 10
+        CONTACT <- 11
 
     Fonctions & Procédures
 

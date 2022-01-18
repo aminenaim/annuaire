@@ -77,7 +77,8 @@ class Utilisateur():
     def getAcces(self) -> 'list[str]':
         return self.acces
 
-    def setAcces(self):
+    def removeAcces(self, nom_fichier : str):
+        self.acces.remove(nom_fichier)
         return self
 
     def dump(self, jsonFile):

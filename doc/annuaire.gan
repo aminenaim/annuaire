@@ -40,31 +40,31 @@
             <depend id="3" type="2" difference="0" hardness="Strong"/>
             <depend id="10" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="3" name="Pilotage Projet" color="#3366ff" meeting="false" start="2021-10-24" duration="77" complete="0" thirdDate="2021-09-28" thirdDate-constraint="0" expand="true">
+        <task id="3" name="Pilotage Projet" color="#3366ff" meeting="false" start="2021-10-24" duration="84" complete="0" thirdDate="2021-09-28" thirdDate-constraint="0" expand="true">
             <depend id="39" type="2" difference="0" hardness="Strong"/>
             <task id="10" name="Structuration du Projet" color="#3366ff" meeting="false" start="2021-10-24" duration="7" complete="0" thirdDate="2021-10-04" thirdDate-constraint="0" expand="true">
                 <depend id="21" type="2" difference="0" hardness="Strong"/>
             </task>
-            <task id="14" name="Suivi Projet" color="#3366ff" meeting="false" start="2021-10-24" duration="77" complete="0" thirdDate="2021-10-21" thirdDate-constraint="0" expand="true"/>
+            <task id="14" name="Suivi Projet" color="#3366ff" meeting="false" start="2021-10-24" duration="84" complete="0" thirdDate="2021-10-21" thirdDate-constraint="0" expand="true"/>
         </task>
-        <task id="21" name="Description du Projet" color="#ffcc00" meeting="false" start="2021-10-31" duration="40" complete="0" thirdDate="2021-10-28" thirdDate-constraint="0" expand="true">
+        <task id="21" name="Description du Projet" color="#ffcc00" meeting="false" start="2021-10-31" duration="43" complete="0" thirdDate="2021-10-28" thirdDate-constraint="0" expand="true">
             <task id="27" name="Rédaction RFC" color="#ffcc00" meeting="false" start="2021-10-31" duration="28" complete="0" thirdDate="2021-10-28" thirdDate-constraint="0" expand="true">
                 <depend id="38" type="2" difference="0" hardness="Strong"/>
             </task>
-            <task id="38" name="Algorithme Serveur" color="#ffcc00" meeting="false" start="2021-11-28" duration="4" complete="0" thirdDate="2021-10-28" thirdDate-constraint="0" expand="true">
+            <task id="38" name="Algorithme Serveur" color="#ffcc00" meeting="false" start="2021-11-28" duration="7" complete="0" thirdDate="2021-10-28" thirdDate-constraint="0" expand="true">
                 <depend id="31" type="2" difference="0" hardness="Strong"/>
             </task>
-            <task id="31" name="Algorithme Client" color="#ffcc00" meeting="false" start="2021-12-02" duration="8" complete="0" thirdDate="2021-10-28" thirdDate-constraint="0" expand="true">
+            <task id="31" name="Algorithme Client" color="#ffcc00" meeting="false" start="2021-12-05" duration="8" complete="0" thirdDate="2021-10-28" thirdDate-constraint="0" expand="true">
                 <depend id="46" type="2" difference="0" hardness="Strong"/>
             </task>
         </task>
-        <task id="46" name="Relecture &amp; Correction" color="#9999ff" meeting="false" start="2021-12-10" duration="11" complete="0" thirdDate="2021-09-13" thirdDate-constraint="0" expand="true">
-            <task id="52" name="Relecture &amp; Correction RFC" color="#9999ff" meeting="false" start="2021-12-10" duration="7" complete="0" thirdDate="2021-12-07" thirdDate-constraint="0" expand="true">
+        <task id="46" name="Relecture &amp; Correction" color="#9999ff" meeting="false" start="2021-12-13" duration="34" complete="0" thirdDate="2021-09-13" thirdDate-constraint="0" expand="true">
+            <task id="52" name="Relecture &amp; Correction RFC" color="#9999ff" meeting="false" start="2021-12-13" duration="7" complete="0" thirdDate="2021-12-07" thirdDate-constraint="0" expand="true">
                 <depend id="56" type="2" difference="0" hardness="Strong"/>
             </task>
-            <task id="56" name="Relecture &amp; Correction des algorithmiques" color="#9999ff" meeting="false" start="2021-12-17" duration="4" complete="0" thirdDate="2021-12-14" thirdDate-constraint="0" expand="true"/>
+            <task id="56" name="Relecture &amp; Correction des algorithmiques" color="#9999ff" meeting="false" start="2021-12-20" duration="27" complete="0" thirdDate="2021-12-14" thirdDate-constraint="0" expand="true"/>
         </task>
-        <task id="39" name="Livraison Description du Projet" color="#ff0033" meeting="true" start="2022-01-09" duration="0" complete="0" thirdDate="2021-09-27" thirdDate-constraint="0" priority="2" expand="true"/>
+        <task id="39" name="Livraison Description du Projet" color="#ff0033" meeting="true" start="2022-01-16" duration="0" complete="0" thirdDate="2021-09-27" thirdDate-constraint="0" priority="2" expand="true"/>
     </tasks>
     <resources/>
     <allocations/>
