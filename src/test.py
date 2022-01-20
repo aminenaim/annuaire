@@ -20,13 +20,15 @@ Plus d'infos : https://docs.python.org/fr/3.9/library/unittest.html#module-unitt
 
 # rechercherContact(user1, prenom="Andre", telephone="0123456789")
 
+GREEN = "\033[92m"
+RESET = "\033[0m"
+
 class testServeur(unittest.TestCase):
 
     def test_constructeurUtilisateur(self):
         """
         Rôle : test du constructeur Utilisateur()
         """
-        print("[TEST] constructeurUtilisateur")
 
         with open("test/jeu_id.txt", 'r') as fichier_test_id:
             for ligne in fichier_test_id:
@@ -51,13 +53,13 @@ class testServeur(unittest.TestCase):
                 self.assertEqual(utilisateur.addAcces("annuaire_aminenm.json").acces[0], "annuaire_aminenm.json")
                 self.assertEqual(utilisateur.getAcces(), ["annuaire_aminenm.json"])
                 self.assertEqual(utilisateur.removeAcces("annuaire_aminenm.json").acces, [] )
-                
+
+        print("[TEST] constructeurUtilisateur"+"\t\t\t\t["+GREEN+"OK"+RESET+"]")
     
     def test_creerUtilisateur(self):
         """
         Rôle : test de la fonction creerUtilisateur
         """
-        print("[TEST] creerUtilisateur")
         
         nom_fichier_test_id = "test/jeu_id.txt"
         
@@ -76,7 +78,8 @@ class testServeur(unittest.TestCase):
 
                 with open("serveur/identifiants.txt", 'r') as fichier_id:
                     self.assertTrue(champ_id_utilisateur in fichier_id.read())
-                    
+
+        print("[TEST] creerUtilisateur..."+"\t\t\t\t["+GREEN+"OK"+RESET+"]")
 
     def test_ajouterContact(self):
         """
@@ -84,7 +87,6 @@ class testServeur(unittest.TestCase):
         """
 
         nom_fichier_test_contact = "test/jeu_contact.txt"
-        print("[TEST] ajouterContact")
 
         utilisateur = Utilisateur("aminenm","e888b69bd484efa688bca24eeeed5ae520f182176f415604bbb83ce9cb360624")
         creerUtilisateur(utilisateur)
@@ -109,23 +111,30 @@ class testServeur(unittest.TestCase):
                     self.assertEqual(annuaire.contacts[-1].courriel, contact.courriel)
                     self.assertEqual(annuaire.contacts[-1].adresse, contact.adresse)
 
+        print("[TEST] ajouterContact..."+"\t\t\t\t["+GREEN+"OK"+RESET+"]")
+
                 
 
     def test_rechercherContact(self):
-        pass
+        """
+        Rôle : tester la fonction rechercher contact
+        """
 
     @classmethod
     def tearDownClass(cls):
         """
         Rôle : nettoyage des fichiers et répertoires modifiés lors de l'exécution des tests
         """
-        print("[INFO] nettoyage du dossier serveur/annuaire/*")
+
         for fichier in os.listdir("serveur/annuaire/"):
             os.remove(os.path.join("serveur/annuaire/", fichier))
 
         with open("serveur/identifiants.txt", "w") as fichier_id:
-            print("[INFO] nettoyage du fichier serveur/identifiant.txt")
             fichier_id.truncate(0)
+
+        print("[INFO] nettoyage du dossier serveur/annuaire/*"+"\t\t["+GREEN+"OK"+RESET+"]")
+        print("[INFO] nettoyage du fichier serveur/identifiant.txt"+"\t["+GREEN+"OK"+RESET+"]")
+
 test = testServeur()
 
 test.test_constructeurUtilisateur()
