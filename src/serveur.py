@@ -14,13 +14,13 @@ def creerUtilisateur(utilisateur : Utilisateur):
     ├─ test/
     ├─ classes.py
     └─ serveur.py
-
     """
-    
-            
+
     nom_fichier = "annuaire_"+utilisateur.identifiant+".json"
+    
     if not os.path.exists(f"serveur/annuaire/"):
-        os.mkdir("servuer/annuaire/")
+        os.mkdir("serveur/annuaire/")
+    
     with open("serveur/identifiants.txt", "a") as fichier_id:
         # Ouverture du fichier en mode ajout et écriture des identifiants de connexion
         fichier_id.write(utilisateur.identifiant+' '+utilisateur.password)
@@ -46,6 +46,7 @@ def ajouterContact(utilisateur : Utilisateur, contact : Contact):
     ├─ classes.py
     └─ serveur.py
     """
+
     utilisateur.annuaire.addContact(contact)
 
     nom_fichier = f"annuaire_{utilisateur.identifiant}.json"
