@@ -1,6 +1,6 @@
 # from request import *
 from classes import *
-
+import os
 def creerUtilisateur(utilisateur : Utilisateur):
     """
     Fonction ajoutant les identifiants de connexion de l'utilisateur dans un fichier centralisé
@@ -18,7 +18,8 @@ def creerUtilisateur(utilisateur : Utilisateur):
 
     """
     nom_fichier = "annuaire_"+utilisateur.identifiant+".json"
-
+    if not os.path.exists(f"serveur/annuaire/"):
+        os.mkdir("servuer/annuaire/")
     with open("serveur/identifiants.txt", "a") as fichier_id:
         # Ouverture du fichier en mode ajout et écriture des identifiants de connexion
         fichier_id.write(utilisateur.identifiant+' '+utilisateur.password)
