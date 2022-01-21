@@ -9,16 +9,6 @@ Le module 'unittest' est utilisé pour tester unitairement les fonctions python.
 Plus d'infos : https://docs.python.org/fr/3.9/library/unittest.html#module-unittest
 """
 
-# user1.addAcces("annuaire_axeldelas")
-
-# ctc = Contact("Aoun", "Andre", "0123456789","andre.aoun@mail.fr","1 Impasse Sanzissu 31000 TOULOUSE")
-
-# creerUtilisateur(user1)
-# creerUtilisateur(user2)
-
-# ajouterContact(user2, ctc)
-
-# rechercherContact(user1, prenom="Andre", telephone="0123456789")
 
 GREEN = "\033[92m"
 RESET = "\033[0m"
@@ -48,14 +38,16 @@ class testServeur(unittest.TestCase):
                 self.assertEqual(len(utilisateur.acces), 0)             # liste des annuaires accessibles vide
 
 
-
                 # tests des méthodes
-                self.assertEqual(utilisateur.addAcces("annuaire_aminenm.json").acces[0], "annuaire_aminenm.json")
-                self.assertEqual(utilisateur.getAcces(), ["annuaire_aminenm.json"])
-                self.assertEqual(utilisateur.removeAcces("annuaire_aminenm.json").acces, [] )
+                self.assertEqual(utilisateur.addAcces("tintin").acces[0], "annuaire_tintin.json")
+                self.assertEqual(utilisateur.getAcces(), ["annuaire_tintin.json"])
+                self.assertEqual(utilisateur.removeAcces("annuaire_tintin.json").acces, [] )
 
         print("[TEST] constructeurUtilisateur"+"\t\t\t\t["+GREEN+"OK"+RESET+"]")
-    
+
+
+
+
     def test_creerUtilisateur(self):
         """
         Rôle : test de la fonction creerUtilisateur
@@ -81,6 +73,9 @@ class testServeur(unittest.TestCase):
 
         print("[TEST] creerUtilisateur..."+"\t\t\t\t["+GREEN+"OK"+RESET+"]")
 
+
+
+
     def test_ajouterContact(self):
         """
         Rôle : tester la fonction d'ajout de contact
@@ -88,7 +83,7 @@ class testServeur(unittest.TestCase):
 
         nom_fichier_test_contact = "test/jeu_contact.txt"
 
-        utilisateur = Utilisateur("aminenm","e888b69bd484efa688bca24eeeed5ae520f182176f415604bbb83ce9cb360624")
+        utilisateur = Utilisateur("tintin","e888b69bd484efa688bca24eeeed5ae520f182176f415604bbb83ce9cb360624")
         creerUtilisateur(utilisateur)
 
         nom_annuaire_utilisateur = "serveur/annuaire/annuaire_"+utilisateur.identifiant+".json"
@@ -96,32 +91,62 @@ class testServeur(unittest.TestCase):
         with open(nom_fichier_test_contact, 'r') as fichier_test_contact:
 
             for ligne in fichier_test_contact:
-                ligne = ligne.split(";")
+                info_contact = ligne.split(";")
 
-                contact = Contact(nom=ligne[0], prenom=ligne[1], telephone=ligne[2], courriel=ligne[3], adresse=ligne[4])
+                contact = Contact(nom=info_contact[0], prenom=info_contact[1], telephone=info_contact[2], courriel=info_contact[3], adresse=info_contact[4])
                 ajouterContact(utilisateur, contact)
 
                 with open(nom_annuaire_utilisateur, 'r') as fichier_annuaire:
 
                     annuaire = json.load(fichier_annuaire, object_hook=convert_to_obj)
 
-                    self.assertEqual(annuaire.contacts[-1].nom, contact.nom)
-                    self.assertEqual(annuaire.contacts[-1].prenom, contact.prenom)
-                    self.assertEqual(annuaire.contacts[-1].telephone, contact.telephone)
-                    self.assertEqual(annuaire.contacts[-1].courriel, contact.courriel)
-                    self.assertEqual(annuaire.contacts[-1].adresse, contact.adresse)
+                    self.assertEqual(annuaire.contacts[-1].__str__(), contact.__str__())
 
         print("[TEST] ajouterContact..."+"\t\t\t\t["+GREEN+"OK"+RESET+"]")
 
-                
+
+
 
     def test_rechercherContact(self):
         """
         Rôle : tester la fonction rechercher contact
         """
+        # Instanciation des utilisateurs
+        utilisateurA = Utilisateur("aminenm","e888b69bd484efa688bca24eeeed5ae520f182176f415604bbb83ce9cb360624")
+        utilisateurB = Utilisateur("axeldls","83701221e23873688094872e3464d6172ae557fb823c84af704f2ff39afa2b17")
+
+        # Inscription des utilisateurs dans les registres
+        creerUtilisateur(utilisateurA)
+        creerUtilisateur(utilisateurB)
+
+        # Ajout à utilisateurA de l'accès en lecture aux annuaire d'utilisateurs B et C
+        utilisateurA.addAcces(utilisateurB.identifiant)
+
+        # Instanciaition des contacts de tests
+        contact1 = Contact(nom="Tournesol", prenom="Tryphon",courriel="professeur@tournesol.com", telephone="0719431961",adresse="Château de Moulinsart")
+        contact2 = Contact(nom="Haddock",prenom="Archibald", courriel="capitaine@haddock.com", telephone="0719412011", adresse="Château de Moulinsart")
+        
+        # Ajout des contacts de tests dans l'annuaire de l'utilisateurB
+        ajouterContact(utilisateurB, contact1)
+        ajouterContact(utilisateurB, contact2)
+
+        # Test de la recherche d'un contact de nom "Tournesol" dans les annuaires accessibles de utilisateurB
+        resultat_rechercherContact = rechercherContact(utilisateurA, nom="Tournesol")
+        self.assertEqual(len(resultat_rechercherContact), 1)
+        self.assertEqual(resultat_rechercherContact[0].__str__(), contact1.__str__())
+
+        # Test de la recherche d'un contact à l'adresse "Château de Moulinsart" dans les annuaires accessibles de utilisateurB
+        resultat_rechercherContact = rechercherContact(utilisateurA, adresse="Château de Moulinsart")
+        self.assertEqual(len(resultat_rechercherContact), 2)
+        self.assertEqual(resultat_rechercherContact[0].__str__(), contact1.__str__())
+        self.assertEqual(resultat_rechercherContact[1].__str__(), contact2.__str__())
+
+        # Test de la recherche d'un contact non présent dans les annuaires d'utilisateurB
+        resultat_rechercherContact = rechercherContact(utilisateurA, prenom="Milou")
+        self.assertEqual(len(resultat_rechercherContact), 0)
 
     @classmethod
-    def tearDownClass(cls):
+    def nettoyer(cls):
         """
         Rôle : nettoyage des fichiers et répertoires modifiés lors de l'exécution des tests
         """
@@ -135,9 +160,19 @@ class testServeur(unittest.TestCase):
         print("[INFO] nettoyage du dossier serveur/annuaire/*"+"\t\t["+GREEN+"OK"+RESET+"]")
         print("[INFO] nettoyage du fichier serveur/identifiant.txt"+"\t["+GREEN+"OK"+RESET+"]")
 
+
+
+
+
+
 test = testServeur()
 
 test.test_constructeurUtilisateur()
 test.test_creerUtilisateur()
+test.nettoyer()
+
 test.test_ajouterContact()
-test.tearDownClass()
+test.nettoyer()
+
+test.test_rechercherContact()
+test.nettoyer()

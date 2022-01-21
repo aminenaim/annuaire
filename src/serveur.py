@@ -1,4 +1,3 @@
-# from request import *
 from classes import *
 
 def creerUtilisateur(utilisateur : Utilisateur):
@@ -17,6 +16,8 @@ def creerUtilisateur(utilisateur : Utilisateur):
     └─ serveur.py
 
     """
+    
+            
     nom_fichier = "annuaire_"+utilisateur.identifiant+".json"
 
     with open("serveur/identifiants.txt", "a") as fichier_id:
@@ -70,12 +71,12 @@ def rechercherContact(utilisateur : Utilisateur, *args, **kwargs):
     liste_correspondance = []
     
     for annuaire in utilisateur.acces:
-        with open(f"serveur/annuaire/{annuaire}.json","r") as fichier_annuaire:
+        with open(f"serveur/annuaire/{annuaire}","r") as fichier_annuaire:
             annuaire_lu = json.load(fichier_annuaire, object_hook=convert_to_obj)
-
+        
         for contact in annuaire_lu.contacts:
             correspondance = False
-            
+
             liste_attribut_reference = [tuple[1] for tuple in list(vars(reference).items())]
             liste_attribut_contact = [tuple[1] for tuple in list(vars(contact).items())]
 
@@ -90,7 +91,9 @@ def rechercherContact(utilisateur : Utilisateur, *args, **kwargs):
                     break
 
             if correspondance == True:
+
                 liste_correspondance.append(contact)
+                # contact.afficherContact()
     
     set(liste_correspondance)
-    print("nb correspondance:", len(liste_correspondance))
+    return liste_correspondance

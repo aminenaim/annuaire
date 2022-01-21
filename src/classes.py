@@ -1,7 +1,6 @@
 """
 Classes utilisees par le client et serveur pour manipuler les informations plus efficacement
 """
-#from email.policy import default
 import json
 
 class Contact():
@@ -12,16 +11,24 @@ class Contact():
     adresse : str
 
 
-    def __init__(self, nom : str, prenom : str, telephone : str, courriel : str, adresse : str) -> None:
+    def __init__(self, nom = '', prenom = '', courriel = '', telephone = '', adresse = '' ) -> None:
         self.nom = nom
         self.prenom = prenom
-        self.telephone = telephone
         self.courriel = courriel
+        # les champs telephone et adresse sont facultatifs donc vides si pas renseignés par le client
+        self.telephone = telephone
         self.adresse = adresse
 
     def dump(self, jsonFile):
         return json.dump(self, jsonFile, default=convert_to_dict, sort_keys=True, indent=4, )
-
+    
+    def afficherContact(self):
+        print(f"         ╮ Nom : {self.nom} \n",
+              f"        │ Prénom : {self.prenom} \n",
+              f"Contact │ Téléphone : {self.telephone} \n",
+              f"        │ Courriel : {self.courriel} \n",
+              f"        ╯ Adresse : {self.adresse} \n")
+            
     #def load(self, string):
     #        self = json.loads(string)
     #        return self
@@ -70,7 +77,8 @@ class Utilisateur():
         self.annuaire = Annuaire()
         self.acces = []
 
-    def addAcces(self, filename : str):
+    def addAcces(self, identifiant : str):
+        filename = "annuaire_"+identifiant+".json"
         self.acces.append(filename)
         return self
 
