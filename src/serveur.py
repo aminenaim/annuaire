@@ -15,7 +15,8 @@ def creerUtilisateur(utilisateur: Utilisateur):
     │  └─ identifiants.txt                            <-- Ajout des identifiants de connexion de l'utilisateur
     ├─ test/
     ├─ classes.py
-    └─ serveur.py
+    ├─ serveur.py
+    └─ test_serveur.py
     """
 
     nom_fichier = "annuaire_" + utilisateur.identifiant + ".json"
@@ -44,7 +45,8 @@ def ajouterContact(utilisateur: Utilisateur, contact: Contact):
     │  └─ identifiants.txt                            
     ├─ test/
     ├─ classes.py
-    └─ serveur.py
+    ├─ serveur.py
+    └─ test_serveur.py
     """
 
     utilisateur.annuaire.addContact(contact)
