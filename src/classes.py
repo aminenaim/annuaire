@@ -15,7 +15,7 @@ class Contact():
         self.nom = nom
         self.prenom = prenom
         self.courriel = courriel
-        # les champs telephone et adresse sont facultatifs donc vides si pas renseignés par le client
+        # les champs 'telephone' et 'adresse' sont facultatifs donc vide si pas renseignés par l'utilisateur
         self.telephone = telephone
         self.adresse = adresse
 
