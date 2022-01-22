@@ -37,7 +37,6 @@ class testServeur(unittest.TestCase):
                 self.assertEqual(len(utilisateur.annuaire.contacts), 0) # liste de contacts est bien vide
                 self.assertEqual(len(utilisateur.acces), 0)             # liste des annuaires accessibles vide
 
-
                 # tests des méthodes
                 self.assertEqual(utilisateur.addAcces("tintin").acces[0], "annuaire_tintin.json")
                 self.assertEqual(utilisateur.getAcces(), ["annuaire_tintin.json"])
@@ -59,15 +58,18 @@ class testServeur(unittest.TestCase):
             for ligne in fichier_test_id:
                 
                 ligne = ligne.split(";")
-                utilisateur = Utilisateur(ligne[0], ligne[1])
 
+                # Instanciation et création de l'utilisateur itéré
+                utilisateur = Utilisateur(ligne[0], ligne[1])
                 creerUtilisateur(utilisateur)
 
+                # Vérification de l'existance d'un annuaire vierge pour l'utilisateur précédemment créé
                 nom_annuaire = "serveur/annuaire/annuaire_"+utilisateur.identifiant+".json"
                 self.assertTrue(path.isfile(nom_annuaire))
                 
-                champ_id_utilisateur = utilisateur.identifiant+" "+utilisateur.password
+                champ_id_utilisateur = utilisateur.identifiant+' '+utilisateur.password
 
+                # Vérification que les données de l'utilisateur ont été ajouté dans le fichier identifiants.txt
                 with open("serveur/identifiants.txt", 'r') as fichier_id:
                     self.assertTrue(champ_id_utilisateur in fichier_id.read())
 
@@ -83,19 +85,24 @@ class testServeur(unittest.TestCase):
 
         nom_fichier_test_contact = "test/jeu_contact.txt"
 
+        # Instanciation et création de l'utilisateur test
         utilisateur = Utilisateur("tintin","e888b69bd484efa688bca24eeeed5ae520f182176f415604bbb83ce9cb360624")
         creerUtilisateur(utilisateur)
 
+        # Récupération du nom de fichier étant l'annuaire de l'utilisateur test
         nom_annuaire_utilisateur = "serveur/annuaire/annuaire_"+utilisateur.identifiant+".json"
         
         with open(nom_fichier_test_contact, 'r') as fichier_test_contact:
 
+            # Ajout de tous les contacts du fichier jeu_contact.txt dans l'annuaire de l'utilisateur test
             for ligne in fichier_test_contact:
                 info_contact = ligne.split(";")
 
+                # Instanciation du contact itéré et ajout dans l'annuaire de l'utilisateur test
                 contact = Contact(nom=info_contact[0], prenom=info_contact[1], telephone=info_contact[2], courriel=info_contact[3], adresse=info_contact[4])
                 ajouterContact(utilisateur, contact)
 
+                # Vérification que le contact itéré a bien été ajouté à la suite de l'annuaire de l'utilisateur test
                 with open(nom_annuaire_utilisateur, 'r') as fichier_annuaire:
 
                     annuaire = json.load(fichier_annuaire, object_hook=convert_to_obj)
@@ -111,18 +118,19 @@ class testServeur(unittest.TestCase):
         """
         Rôle : tester la fonction rechercher contact
         """
-        # Instanciation des utilisateurs
+
+        # Instanciation des utilisateurs de tests
         utilisateurA = Utilisateur("aminenm","e888b69bd484efa688bca24eeeed5ae520f182176f415604bbb83ce9cb360624")
         utilisateurB = Utilisateur("axeldls","83701221e23873688094872e3464d6172ae557fb823c84af704f2ff39afa2b17")
 
-        # Inscription des utilisateurs dans les registres
+        # Ajout des utilisateurs dans les registres
         creerUtilisateur(utilisateurA)
         creerUtilisateur(utilisateurB)
 
-        # Ajout à utilisateurA de l'accès en lecture aux annuaire d'utilisateurs B et C
+        # Ajout à utilisateurA de l'accès en lecture aux annuaire de l'utilisateur B
         utilisateurA.addAcces(utilisateurB.identifiant)
 
-        # Instanciaition des contacts de tests
+        # Instanciation des contacts de tests
         contact1 = Contact(nom="Tournesol", prenom="Tryphon",courriel="professeur@tournesol.com", telephone="0719431961",adresse="Château de Moulinsart")
         contact2 = Contact(nom="Haddock",prenom="Archibald", courriel="capitaine@haddock.com", telephone="0719412011", adresse="Château de Moulinsart")
         
@@ -130,12 +138,12 @@ class testServeur(unittest.TestCase):
         ajouterContact(utilisateurB, contact1)
         ajouterContact(utilisateurB, contact2)
 
-        # Test de la recherche d'un contact de nom "Tournesol" dans les annuaires accessibles de utilisateurB
+        # Test de la recherche d'un contact de nom "Tournesol" dans les annuaires accessibles d'utilisateurB
         resultat_rechercherContact = rechercherContact(utilisateurA, nom="Tournesol")
         self.assertEqual(len(resultat_rechercherContact), 1)
         self.assertEqual(resultat_rechercherContact[0].__str__(), contact1.__str__())
 
-        # Test de la recherche d'un contact à l'adresse "Château de Moulinsart" dans les annuaires accessibles de utilisateurB
+        # Test de la recherche d'un contact à l'adresse "Château de Moulinsart" dans les annuaires accessibles d'utilisateurB
         resultat_rechercherContact = rechercherContact(utilisateurA, adresse="Château de Moulinsart")
         self.assertEqual(len(resultat_rechercherContact), 2)
         self.assertEqual(resultat_rechercherContact[0].__str__(), contact1.__str__())
@@ -145,15 +153,19 @@ class testServeur(unittest.TestCase):
         resultat_rechercherContact = rechercherContact(utilisateurA, prenom="Milou")
         self.assertEqual(len(resultat_rechercherContact), 0)
 
+        print("[TEST] rechercherContact..."+"\t\t\t\t["+GREEN+"OK"+RESET+"]")
+
     @classmethod
     def nettoyer(cls):
         """
         Rôle : nettoyage des fichiers et répertoires modifiés lors de l'exécution des tests
         """
 
+        # Suppression de tous les fichiers annuaires
         for fichier in os.listdir("serveur/annuaire/"):
             os.remove(os.path.join("serveur/annuaire/", fichier))
 
+        # Reset du fichier identifiants.txt
         with open("serveur/identifiants.txt", "w") as fichier_id:
             fichier_id.truncate(0)
 
