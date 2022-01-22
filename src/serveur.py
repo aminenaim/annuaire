@@ -1,6 +1,8 @@
 from classes import *
 import os
-def creerUtilisateur(utilisateur : Utilisateur):
+
+
+def creerUtilisateur(utilisateur: Utilisateur):
     """
     Fonction ajoutant les identifiants de connexion de l'utilisateur dans un fichier centralisé
     Fonction créant un fichier annuaire pour l'utilisateur passé en parametre
@@ -16,23 +18,21 @@ def creerUtilisateur(utilisateur : Utilisateur):
     └─ serveur.py
     """
 
-    nom_fichier = "annuaire_"+utilisateur.identifiant+".json"
-    
+    nom_fichier = "annuaire_" + utilisateur.identifiant + ".json"
+
     if not os.path.exists(f"serveur/annuaire/"):
         os.mkdir("serveur/annuaire/")
-    
+
     with open("serveur/identifiants.txt", "a") as fichier_id:
         # Ouverture du fichier en mode ajout et écriture des identifiants de connexion
-        fichier_id.write(utilisateur.identifiant+' '+utilisateur.password)
+        fichier_id.write(utilisateur.identifiant + ' ' + utilisateur.password)
 
-    with open("serveur/annuaire/"+nom_fichier,'w') as fichier:
+    with open("serveur/annuaire/" + nom_fichier, 'w') as fichier:
         # Ouverture du fichier en mode écriture et écriture de l'annuaire sérialisé
         utilisateur.annuaire.dump(fichier)
-    
 
 
-
-def ajouterContact(utilisateur : Utilisateur, contact : Contact):
+def ajouterContact(utilisateur: Utilisateur, contact: Contact):
     """
     Fonction ajoutant un contact dans l'annuaire de l'utilisateur passé en paramètre
 
@@ -50,15 +50,13 @@ def ajouterContact(utilisateur : Utilisateur, contact : Contact):
     utilisateur.annuaire.addContact(contact)
 
     nom_fichier = f"annuaire_{utilisateur.identifiant}.json"
-    
-    with open("serveur/annuaire/"+nom_fichier,'w') as fichier:
+
+    with open("serveur/annuaire/" + nom_fichier, 'w') as fichier:
         # Ouverture du fichier en mode écriture et écriture de l'annuaire sérialisé mis à jour
         utilisateur.annuaire.dump(fichier)
 
 
-
-
-def rechercherContact(utilisateur : Utilisateur, *args, **kwargs):
+def rechercherContact(utilisateur: Utilisateur, *args, **kwargs):
     """
     Fonction permettant de chercher dans la liste des annuaires accordées le contact demandé
     """
@@ -69,21 +67,21 @@ def rechercherContact(utilisateur : Utilisateur, *args, **kwargs):
     adresse = kwargs.get("adresse", '')
 
     reference = Contact(nom, prenom, telephone, courriel, adresse)
-    
+
     liste_correspondance = []
-    
+
     for annuaire in utilisateur.acces:
-        with open(f"serveur/annuaire/{annuaire}","r") as fichier_annuaire:
+        with open(f"serveur/annuaire/{annuaire}", "r") as fichier_annuaire:
             annuaire_lu = json.load(fichier_annuaire, object_hook=convert_to_obj)
-        
+
         for contact in annuaire_lu.contacts:
             correspondance = False
 
-            liste_attribut_reference = [tuple[1] for tuple in list(vars(reference).items())]
-            liste_attribut_contact = [tuple[1] for tuple in list(vars(contact).items())]
+            liste_attribut_reference = [t[1] for t in list(vars(reference).items())]
+            liste_attribut_contact = [t[1] for t in list(vars(contact).items())]
 
             for attribut_reference, attribut_contact in zip(liste_attribut_reference, liste_attribut_contact):
-                
+
                 if attribut_reference == '' or attribut_contact == '':
                     continue
                 elif attribut_reference == attribut_contact:
@@ -92,10 +90,9 @@ def rechercherContact(utilisateur : Utilisateur, *args, **kwargs):
                     correspondance = False
                     break
 
-            if correspondance == True:
-
+            if correspondance:
                 liste_correspondance.append(contact)
                 # contact.afficherContact()
-    
+
     set(liste_correspondance)
     return liste_correspondance
