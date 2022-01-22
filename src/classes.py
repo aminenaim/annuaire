@@ -29,10 +29,6 @@ class Contact:
               f"        │ Courriel : {self.courriel} \n",
               f"        ╯ Adresse : {self.adresse} \n")
 
-    # def load(self, string):
-    #        self = json.loads(string)
-    #        return self
-
     def __str__(self) -> str:
         return f"{self.nom} {self.prenom} {self.telephone} {self.courriel} {self.adresse}"
 
@@ -58,10 +54,6 @@ class Annuaire:
 
     def dump(self, jsonFile):
         return json.dump(self, jsonFile, default=convert_to_dict, sort_keys=True, indent=4, )
-
-    # def load(self, savedJsonFile):
-    #    tempDict = json.load(savedJsonFile, object_hook=convert_to_obj)
-    #    return self
 
     def __str__(self) -> str:
         return "\n".join([contact.__str__() for contact in self.contacts])

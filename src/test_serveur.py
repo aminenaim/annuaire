@@ -18,29 +18,27 @@ class testServeur(unittest.TestCase):
         """
         Rôle : test du constructeur Utilisateur()
         """
+        identifiant = "Spirou"
+        password = "a226176847c3f8f4007cb3b5e98186ae9b949ad4337f6457f966c11ced00f2c0"
+        utilisateur = Utilisateur(identifiant, password)
 
-        with open("test/jeu_id.txt", 'r') as fichier_test_id:
-            for ligne in fichier_test_id:
-                ligne = ligne.split(";")
-                utilisateur = Utilisateur(ligne[0], ligne[1])
+        # tests des instances
+        self.assertIsInstance(utilisateur,
+                              Utilisateur)
+                        # objet 'utilisateur' est bien une instance de la classe 'Utilisateur'
+        self.assertIsInstance(utilisateur.annuaire, Annuaire)
+        self.assertIsInstance(utilisateur.annuaire.contacts, list)
 
-                # tests des instances
-                self.assertIsInstance(utilisateur,
-                                      Utilisateur)
-                # objet 'utilisateur' est bien une instance de la classe 'Utilisateur'
-                self.assertIsInstance(utilisateur.annuaire, Annuaire)
-                self.assertIsInstance(utilisateur.annuaire.contacts, list)
+        # tests des attributs
+        self.assertEqual(utilisateur.identifiant, identifiant)  # attribut 'identifiant' est de la bonne valeur
+        self.assertEqual(utilisateur.password, password)  # attribut 'password' est de la bonne valeur
+        self.assertEqual(len(utilisateur.annuaire.contacts), 0)  # liste de contacts est bien vide
+        self.assertEqual(len(utilisateur.acces), 0)  # liste des annuaires accessibles vide
 
-                # tests des attributs
-                self.assertEqual(utilisateur.identifiant, ligne[0])  # attribut 'identifiant' est de la bonne valeur
-                self.assertEqual(utilisateur.password, ligne[1])  # attribut 'password' est de la bonne valeur
-                self.assertEqual(len(utilisateur.annuaire.contacts), 0)  # liste de contacts est bien vide
-                self.assertEqual(len(utilisateur.acces), 0)  # liste des annuaires accessibles vide
-
-                # tests des méthodes
-                self.assertEqual(utilisateur.addAcces("tintin").acces[0], "annuaire_tintin.json")
-                self.assertEqual(utilisateur.getAcces(), ["annuaire_tintin.json"])
-                self.assertEqual(utilisateur.removeAcces("annuaire_tintin.json").acces, [])
+        # tests des méthodes
+        self.assertEqual(utilisateur.addAcces("tintin").acces[0], "annuaire_tintin.json")
+        self.assertEqual(utilisateur.getAcces(), ["annuaire_tintin.json"])
+        self.assertEqual(utilisateur.removeAcces("annuaire_tintin.json").acces, [])
 
         print("[TEST] constructeurUtilisateur" + "\t\t\t\t[" + GREEN + "OK" + RESET + "]")
 
@@ -48,26 +46,22 @@ class testServeur(unittest.TestCase):
         """
         Rôle : test de la fonction creerUtilisateur
         """
+        identifiant = "Spirou"
+        password = "a226176847c3f8f4007cb3b5e98186ae9b949ad4337f6457f966c11ced00f2c0"
 
-        nom_fichier_test_id = "test/jeu_id.txt"
+        # Instanciation et création de l'utilisateur itéré
+        utilisateur = Utilisateur(identifiant, password)
+        creerUtilisateur(utilisateur)
 
-        with open(nom_fichier_test_id, 'r') as fichier_test_id:
-            for ligne in fichier_test_id:
-                ligne = ligne.split(";")
+        # Vérification de l'existance d'un annuaire vierge pour l'utilisateur précédemment créé
+        nom_annuaire = "serveur/annuaire/annuaire_" + utilisateur.identifiant + ".json"
+        self.assertTrue(path.isfile(nom_annuaire))
 
-                # Instanciation et création de l'utilisateur itéré
-                utilisateur = Utilisateur(ligne[0], ligne[1])
-                creerUtilisateur(utilisateur)
+        champ_id_utilisateur = utilisateur.identifiant + ' ' + utilisateur.password
 
-                # Vérification de l'existance d'un annuaire vierge pour l'utilisateur précédemment créé
-                nom_annuaire = "serveur/annuaire/annuaire_" + utilisateur.identifiant + ".json"
-                self.assertTrue(path.isfile(nom_annuaire))
-
-                champ_id_utilisateur = utilisateur.identifiant + ' ' + utilisateur.password
-
-                # Vérification que les données de l'utilisateur ont été ajouté dans le fichier identifiants.txt
-                with open("serveur/identifiants.txt", 'r') as fichier_id:
-                    self.assertTrue(champ_id_utilisateur in fichier_id.read())
+        # Vérification que les données de l'utilisateur ont été ajouté dans le fichier identifiants.txt
+        with open("serveur/identifiants.txt", 'r') as fichier_id:
+            self.assertTrue(champ_id_utilisateur in fichier_id.read())
 
         print("[TEST] creerUtilisateur..." + "\t\t\t\t[" + GREEN + "OK" + RESET + "]")
 
@@ -75,9 +69,7 @@ class testServeur(unittest.TestCase):
         """
         Rôle : tester la fonction d'ajout de contact
         """
-
-        nom_fichier_test_contact = "test/jeu_contact.txt"
-
+        
         # Instanciation et création de l'utilisateur test
         utilisateur = Utilisateur("tintin", "e888b69bd484efa688bca24eeeed5ae520f182176f415604bbb83ce9cb360624")
         creerUtilisateur(utilisateur)
@@ -85,21 +77,16 @@ class testServeur(unittest.TestCase):
         # Récupération du nom de fichier étant l'annuaire de l'utilisateur test
         nom_annuaire_utilisateur = "serveur/annuaire/annuaire_" + utilisateur.identifiant + ".json"
 
-        with open(nom_fichier_test_contact, 'r') as fichier_test_contact:
-            # Ajout de tous les contacts du fichier jeu_contact.txt dans l'annuaire de l'utilisateur test
-            for ligne in fichier_test_contact:
-                info_contact = ligne.split(";")
+        # Instanciation du contact itéré et ajout dans l'annuaire de l'utilisateur test
+        contact = Contact(nom="Zorglub", prenom="Bulgroz", telephone="0719592017",
+                            courriel="zor@glub", adresse="Zorgland")
+        ajouterContact(utilisateur, contact)
 
-                # Instanciation du contact itéré et ajout dans l'annuaire de l'utilisateur test
-                contact = Contact(nom=info_contact[0], prenom=info_contact[1], telephone=info_contact[2],
-                                  courriel=info_contact[3], adresse=info_contact[4])
-                ajouterContact(utilisateur, contact)
+        # Vérification que le contact itéré a bien été ajouté à la suite de l'annuaire de l'utilisateur test
+        with open(nom_annuaire_utilisateur, 'r') as fichier_annuaire:
+            annuaire = json.load(fichier_annuaire, object_hook=convert_to_obj)
 
-                # Vérification que le contact itéré a bien été ajouté à la suite de l'annuaire de l'utilisateur test
-                with open(nom_annuaire_utilisateur, 'r') as fichier_annuaire:
-                    annuaire = json.load(fichier_annuaire, object_hook=convert_to_obj)
-
-                    self.assertEqual(annuaire.contacts[-1].__str__(), contact.__str__())
+            self.assertEqual(annuaire.contacts[-1].__str__(), contact.__str__())
 
         print("[TEST] ajouterContact..." + "\t\t\t\t[" + GREEN + "OK" + RESET + "]")
 
