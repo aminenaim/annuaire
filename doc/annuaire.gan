@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2021-09-13" view-index="0" gantt-divider-location="595" resource-divider-location="300" version="2.8.11" locale="fr_FR">
+<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2021-10-10" view-index="0" gantt-divider-location="506" resource-divider-location="300" version="2.8.11" locale="fr">
     <description/>
     <view zooming-state="default:7" id="gantt-chart">
-        <field id="tpd3" name="Nom" width="351" order="0"/>
-        <field id="tpd4" name="Date de début" width="85" order="1"/>
-        <field id="tpd5" name="Date de fin" width="155" order="2"/>
+        <field id="tpd3" name="Nom" width="335" order="0"/>
+        <field id="tpd4" name="Date de début" width="86" order="1"/>
+        <field id="tpd5" name="Date de fin" width="81" order="2"/>
         <option id="color.recent">
-            <![CDATA[#9999ff #9900ff #ff0033 #ffcc00 #3366ff]]>
+            <![CDATA[#99ff99 #99ccff #ffcc00 #ff0033 #9999ff #9900ff #3366ff]]>
         </option>
     </view>
     <view id="resource-table">
@@ -40,12 +40,12 @@
             <depend id="3" type="2" difference="0" hardness="Strong"/>
             <depend id="10" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="3" name="Pilotage Projet" color="#3366ff" meeting="false" start="2021-10-24" duration="84" complete="0" thirdDate="2021-09-28" thirdDate-constraint="0" expand="true">
-            <depend id="39" type="2" difference="0" hardness="Strong"/>
+        <task id="3" name="Pilotage Projet" color="#3366ff" meeting="false" start="2021-10-24" duration="100" complete="0" thirdDate="2021-09-28" thirdDate-constraint="0" expand="true">
+            <depend id="60" type="2" difference="0" hardness="Strong"/>
             <task id="10" name="Structuration du Projet" color="#3366ff" meeting="false" start="2021-10-24" duration="7" complete="0" thirdDate="2021-10-04" thirdDate-constraint="0" expand="true">
                 <depend id="21" type="2" difference="0" hardness="Strong"/>
             </task>
-            <task id="14" name="Suivi Projet" color="#3366ff" meeting="false" start="2021-10-24" duration="84" complete="0" thirdDate="2021-10-21" thirdDate-constraint="0" expand="true"/>
+            <task id="14" name="Suivi Projet" color="#3366ff" meeting="false" start="2021-10-24" duration="100" complete="0" thirdDate="2021-10-21" thirdDate-constraint="0" expand="true"/>
         </task>
         <task id="21" name="Description du Projet" color="#ffcc00" meeting="false" start="2021-10-31" duration="43" complete="0" thirdDate="2021-10-28" thirdDate-constraint="0" expand="true">
             <task id="27" name="Rédaction RFC" color="#ffcc00" meeting="false" start="2021-10-31" duration="28" complete="0" thirdDate="2021-10-28" thirdDate-constraint="0" expand="true">
@@ -58,13 +58,27 @@
                 <depend id="46" type="2" difference="0" hardness="Strong"/>
             </task>
         </task>
-        <task id="46" name="Relecture &amp; Correction" color="#9999ff" meeting="false" start="2021-12-13" duration="34" complete="0" thirdDate="2021-09-13" thirdDate-constraint="0" expand="true">
+        <task id="46" name="Relecture &amp; Correction" color="#9999ff" meeting="false" start="2021-12-13" duration="30" complete="0" thirdDate="2021-09-13" thirdDate-constraint="0" expand="true">
+            <depend id="39" type="2" difference="0" hardness="Strong"/>
+            <depend id="58" type="2" difference="0" hardness="Strong"/>
             <task id="52" name="Relecture &amp; Correction RFC" color="#9999ff" meeting="false" start="2021-12-13" duration="7" complete="0" thirdDate="2021-12-07" thirdDate-constraint="0" expand="true">
                 <depend id="56" type="2" difference="0" hardness="Strong"/>
             </task>
-            <task id="56" name="Relecture &amp; Correction des algorithmiques" color="#9999ff" meeting="false" start="2021-12-20" duration="27" complete="0" thirdDate="2021-12-14" thirdDate-constraint="0" expand="true"/>
+            <task id="56" name="Relecture &amp; Correction des algorithmiques" color="#9999ff" meeting="false" start="2021-12-20" duration="23" complete="0" thirdDate="2021-12-14" thirdDate-constraint="0" expand="true"/>
         </task>
-        <task id="39" name="Livraison Description du Projet" color="#ff0033" meeting="true" start="2022-01-16" duration="0" complete="0" thirdDate="2021-09-27" thirdDate-constraint="0" priority="2" expand="true"/>
+        <task id="39" name="Livraison Description du Projet" color="#ff0033" meeting="true" start="2022-01-12" duration="0" complete="0" thirdDate="2021-09-27" thirdDate-constraint="0" priority="2" expand="true"/>
+        <task id="58" name="Développement Python" color="#99ccff" meeting="false" start="2022-01-12" duration="7" complete="0" thirdDate="2022-01-16" thirdDate-constraint="0" expand="true">
+            <depend id="69" type="2" difference="0" hardness="Rubber"/>
+            <task id="62" name="Développement des classes" color="#99ccff" meeting="false" start="2022-01-12" duration="2" complete="0" thirdDate="2022-01-12" thirdDate-constraint="0" expand="true">
+                <depend id="65" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="65" name="Développement des fonctions" color="#99ccff" meeting="false" start="2022-01-14" duration="3" complete="0" thirdDate="2022-01-14" thirdDate-constraint="0" expand="true">
+                <depend id="67" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="67" name="Développement des tests unitaires" color="#99ccff" meeting="false" start="2022-01-17" duration="2" complete="0" thirdDate="2022-01-16" thirdDate-constraint="0" expand="true"/>
+        </task>
+        <task id="69" name="Compte Rendu &amp; Vidéo" color="#99ff99" meeting="false" start="2022-01-22" duration="3" complete="0" thirdDate="2022-01-18" thirdDate-constraint="0" expand="true"/>
+        <task id="60" name="Livraison Compte Rendu &amp; VIdéo" color="#ff0033" meeting="true" start="2022-02-01" duration="0" complete="0" thirdDate="2021-11-14" thirdDate-constraint="0" expand="true"/>
     </tasks>
     <resources/>
     <allocations/>

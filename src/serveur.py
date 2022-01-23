@@ -75,7 +75,7 @@ def rechercherContact(utilisateur: Utilisateur, *args, **kwargs):
 
     liste_correspondance = []
 
-    for annuaire in utilisateur.acces:
+    for annuaire in utilisateur.annuaire.acces:
         # Parcours des annuaires accessibles en lecture
 
         with open(f"serveur/annuaire/{annuaire}", "r") as fichier_annuaire:

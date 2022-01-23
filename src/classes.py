@@ -39,44 +39,24 @@ class Contact:
 
 class Annuaire:
     contacts = []
+    acces = []
 
     # Constructeur afin d'instancier un objet de type Annuaire
-    def __init__(self, contacts=None) -> None:
+    def __init__(self, contacts=None, acces=None) -> None:
         if contacts is None:
             contacts = []
         self.contacts = contacts
-
+        self.acces = []
+    
     # Méthode 'addContact' afin d'ajouter un contact dans l'annuaire d'un utilisateur donné en paramètre
     def addContact(self, contact: Contact):
         self.contacts.append(contact)
         return self
 
-    # Méthode 'dump' afin de sérialiser et stocker l'instance en json
-    def dump(self, jsonFile):
-        return json.dump(self, jsonFile, default=convert_to_dict, sort_keys=True, indent=4, )
-
-    # Redéfinition de la méthode '__str__' afin d'afficher les informations sur une ligne de chaque contact contenu dans l'annuaire
-    def __str__(self) -> str:
-        return "\n".join([contact.__str__() for contact in self.contacts])
-
-
-class Utilisateur:
-    identifiant: str
-    password: str
-    annuaire: Annuaire
-    acces = []
-
-    # Constructeur afin d'instancier un objet de type Utilisateur
-    def __init__(self, identifiant: str, pwd: str) -> None:
-        self.identifiant = identifiant
-        self.password = pwd
-        self.annuaire = Annuaire()
-        self.acces = []
-
     # Méthode 'addAcces' afin de donner le droit à un utilisateur distinct de lire l'annuaire
     def addAcces(self, identifiant: str):
         filename = "annuaire_" + identifiant + ".json"
-        self.acces.append(filename)
+        self.acces.append(filename) 
         return self
 
     # Méthode 'removeAcces' afin de retirer le droit à un utilisateur distinct de lire l'annuaire
@@ -88,9 +68,29 @@ class Utilisateur:
     def dump(self, jsonFile):
         return json.dump(self, jsonFile, default=convert_to_dict, sort_keys=True, indent=4, )
 
+    # Redéfinition de la méthode '__str__' afin d'afficher les informations sur une ligne de chaque contact contenu dans l'annuaire
+    def __str__(self) -> str:
+        return "\n".join([contact.__str__() for contact in self.contacts]) + '\n'.join(self.acces)
+
+
+class Utilisateur:
+    identifiant: str
+    password: str
+    annuaire: Annuaire
+
+    # Constructeur afin d'instancier un objet de type Utilisateur
+    def __init__(self, identifiant: str, pwd: str) -> None:
+        self.identifiant = identifiant
+        self.password = pwd
+        self.annuaire = Annuaire()
+
+    # Méthode 'dump' afin de sérialiser et stocker l'instance en json
+    def dump(self, jsonFile):
+        return json.dump(self, jsonFile, default=convert_to_dict, sort_keys=True, indent=4, )
+
     # Redéfinition de la méthode '__str__' afin d'afficher les informations de l'utilisateur sur une ligne
     def __str__(self) -> str:
-        return f"{self.identifiant} {self.password} {self.annuaire}\n" + '\n'.join(self.acces)
+        return f"{self.identifiant} {self.password} {self.annuaire}\n"
 
 # Fonction pour faciliter l'étape de sérialisation
 def convert_to_dict(obj):

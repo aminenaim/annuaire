@@ -28,17 +28,19 @@ class testServeur(unittest.TestCase):
                         # objet 'utilisateur' est bien une instance de la classe 'Utilisateur'
         self.assertIsInstance(utilisateur.annuaire, Annuaire)
         self.assertIsInstance(utilisateur.annuaire.contacts, list)
+        self.assertIsInstance(utilisateur.annuaire.acces, list)
+
 
         # tests des attributs
         self.assertEqual(utilisateur.identifiant, identifiant)  # attribut 'identifiant' est de la bonne valeur
         self.assertEqual(utilisateur.password, password)  # attribut 'password' est de la bonne valeur
         self.assertEqual(len(utilisateur.annuaire.contacts), 0)  # liste de contacts est bien vide
-        self.assertEqual(len(utilisateur.acces), 0)  # liste des annuaires accessibles vide
+        self.assertEqual(len(utilisateur.annuaire.acces), 0)  # liste des annuaires accessibles vide
 
         # tests des méthodes
-        self.assertEqual(utilisateur.addAcces("tintin").acces[0], "annuaire_tintin.json")
-        self.assertEqual(utilisateur.getAcces(), ["annuaire_tintin.json"])
-        self.assertEqual(utilisateur.removeAcces("annuaire_tintin.json").acces, [])
+        self.assertEqual(utilisateur.annuaire.addAcces("tintin").acces[0], "annuaire_tintin.json")
+        self.assertEqual(utilisateur.annuaire.acces, ["annuaire_tintin.json"])
+        self.assertEqual(utilisateur.annuaire.removeAcces("annuaire_tintin.json").acces, [])
 
         print("[TEST] constructeurUtilisateur" + "\t\t\t\t[" + GREEN + "OK" + RESET + "]")
 
@@ -65,6 +67,8 @@ class testServeur(unittest.TestCase):
 
         print("[TEST] creerUtilisateur..." + "\t\t\t\t[" + GREEN + "OK" + RESET + "]")
 
+
+
     def test_ajouterContact(self):
         """
         Rôle : tester la fonction d'ajout de contact
@@ -90,6 +94,8 @@ class testServeur(unittest.TestCase):
 
         print("[TEST] ajouterContact..." + "\t\t\t\t[" + GREEN + "OK" + RESET + "]")
 
+
+
     def test_rechercherContact(self):
         """
         Rôle : tester la fonction rechercher contact
@@ -104,7 +110,7 @@ class testServeur(unittest.TestCase):
         creerUtilisateur(utilisateurB)
 
         # Ajout à utilisateurA de l'accès en lecture aux annuaire de l'utilisateur B
-        utilisateurA.addAcces(utilisateurB.identifiant)
+        utilisateurA.annuaire.addAcces(utilisateurB.identifiant)
 
         # Instanciation des contacts de tests
         contact1 = Contact(nom="Tournesol", prenom="Tryphon", courriel="professeur@tournesol.com",
