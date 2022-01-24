@@ -13,6 +13,20 @@ class Contact:
 
     # Constructeur afin d'instancier un objet de type Contact
     def __init__(self, nom='', prenom='', courriel='', telephone='', adresse='') -> None:
+        # Gestion des erreurs
+        if nom.isalpha() == False:
+            raise ValueError("nom doit uniquement contenir des caractères alphabétiques.")
+
+        elif prenom.isalpha() == False:
+            raise ValueError("prenom doit uniquement contenir des caractères alphabétiques.")
+
+        elif telephone.isnumeric() == False :
+            raise ValueError("telephone doit uniquement contenir des caractères numériques.")
+
+        elif len(telephone) > 15:
+            # format du numéro de téléphone doit respecter le standard E.164
+            raise ValueError("telephone ne peut faire plus de 15 chiffres")
+
         self.nom = nom
         self.prenom = prenom
         self.courriel = courriel
@@ -80,6 +94,9 @@ class Utilisateur:
 
     # Constructeur afin d'instancier un objet de type Utilisateur
     def __init__(self, identifiant: str, pwd: str) -> None:
+        if identifiant.isalnum() == False:
+            raise ValueError("identifiant contient des caractéres non alphanumériques.")
+
         self.identifiant = identifiant
         self.password = pwd
         self.annuaire = Annuaire()

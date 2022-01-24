@@ -69,9 +69,8 @@ def rechercherContact(utilisateur: Utilisateur, *args, **kwargs):
     courriel = kwargs.get("courriel", '')
     adresse = kwargs.get("adresse", '')
 
-    reference = Contact(nom, prenom, telephone, courriel, adresse)
     # Récupération des valeurs des attributs du contact de reference
-    liste_attribut_reference = [t[1] for t in list(vars(reference).items())]
+    liste_attribut_reference = [nom,prenom,telephone,courriel,adresse]
 
     liste_correspondance = []
 
