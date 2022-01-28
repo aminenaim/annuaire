@@ -1,21 +1,15 @@
 # Shared Directory Service
 
-University project done in python. 
+Projet d'UE programmé en Python
 
 # Running the project
 
 ### Prerequisites
-To run the project, the only requirement is to have a valid python installation (tested with `3.9.5`) including `socket` and `threadings`.
 
-In one terminal
+Aucun prérequis exigé. Il suffit de se placer dans src/ et saisir : 
 ```
-python3 server.py
+python3 test_serveur.py
 ```
-In another terminal
-```
-python3 client.py
-```
-And then (if everything goes well) the client/server connection should be successfully established.
 
 <!-- ### Directory Overview
 
